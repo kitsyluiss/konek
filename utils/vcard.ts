@@ -31,19 +31,26 @@ export const downloadVCard = (contact: BlockData['contactInfo']) => {
   if (!contact) return;
   const vcard = generateVCard(contact);
   const isAndroid = /Android/i.test(navigator.userAgent);
-  const dataUri = `data:text/vcard;charset=utf-8,${encodeURIComponent(vcard)}`;
 
   if (isAndroid) {
+    // Android is very strict about data URIs, so we use a standard Blob URL
+    // which reliably triggers the Android Download Manager
+    const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = dataUri;
+    link.href = url;
+    
     const name = `${contact.firstName || 'contact'}_${contact.lastName || ''}`.trim();
     link.download = `${name || 'contact'}.vcf`;
+    
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   } else {
     // For iOS and others, assigning to window.location directly triggers the native Contacts sheet
     // without popping up a file download prompt in most browsers.
+    const dataUri = `data:text/vcard;charset=utf-8,${encodeURIComponent(vcard)}`;
     window.location.href = dataUri;
   }
 };

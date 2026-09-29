@@ -35,9 +35,12 @@ export const downloadVCard = (contact: BlockData['contactInfo']) => {
   // which will immediately open the Contacts app instead of the Downloads folder.
   const dataUri = `data:text/vcard;charset=utf-8,${encodeURIComponent(vcard)}`;
 
+  // By omitting the 'download' attribute and using target='_blank', 
+  // mobile devices will typically open the contact card immediately instead of downloading a file.
   const link = document.createElement('a');
   link.href = dataUri;
   link.target = '_blank';
+  link.rel = 'noopener noreferrer';
   // Deliberately omitting link.download so the browser opens it instead of saving it to Files
 
   document.body.appendChild(link);

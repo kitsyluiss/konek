@@ -159,7 +159,7 @@ export const extractFacebookSrc = (input: string | undefined | null): string | n
     const isVideo =
       input.includes('/videos/') || input.includes('/watch') || input.includes('fb.watch');
     if (isVideo) {
-      return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(input)}&show_text=false&width=560`;
+      return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(input)}&show_text=false&width=560&autoplay=true&playsinline=true`;
     } else {
       return `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(input)}&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId`;
     }

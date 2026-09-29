@@ -197,7 +197,7 @@ const PreviewPage: React.FC = () => {
             <a
               key={account.platform}
               href={url}
-              target="_blank"
+              target={url.startsWith('mailto:') || url.startsWith('tel:') ? '_self' : '_blank'}
               rel="noopener noreferrer"
               className={`${showCount ? 'px-3 py-2' : 'w-10 h-10'} bg-white rounded-full shadow-md flex items-center justify-center gap-2 hover:scale-105 hover:shadow-lg transition-all`}
               title={option.label}
@@ -341,7 +341,7 @@ const PreviewPage: React.FC = () => {
                     <a
                       key={account.platform}
                       href={url}
-                      target="_blank"
+                      target={url.startsWith('mailto:') || url.startsWith('tel:') ? '_self' : '_blank'}
                       rel="noopener noreferrer"
                       className={`${showCount ? 'px-3 py-2' : 'w-10 h-10'} bg-white rounded-full shadow-md flex items-center justify-center gap-2 font-semibold text-gray-900 transition-transform hover:-translate-y-0.5`}
                       title={option.label}

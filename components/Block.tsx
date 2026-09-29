@@ -20,6 +20,7 @@ import {
   isValidYouTubeChannelId,
   isValidLocationString,
   extractMapSrc,
+  extractFacebookSrc,
 } from '../utils/security';
 
 // Apple TV style 3D tilt effect hook
@@ -528,7 +529,7 @@ const Block: React.FC<BlockProps> = ({
         layoutId={block.id}
         layout
         href={url || undefined}
-        target="_blank"
+        target={url && (url.startsWith('mailto:') || url.startsWith('tel:')) ? '_self' : '_blank'}
         rel="noopener noreferrer"
         draggable={!isResizing}
         onDragStart={(e) => {
@@ -1121,32 +1122,39 @@ const Block: React.FC<BlockProps> = ({
               )}
             </div>
           ) : block.type === BlockType.FACEBOOK ? (
-            /* FACEBOOK EMBED BLOCK */
-            (() => {
-              // Extract src from the iframe HTML stored in block.content
-              const srcMatch = block.content?.match(/src=["']([^"']+)["']/);
-              const embedSrc = srcMatch ? srcMatch[1].replace(/&amp;/g, '&') : null;
-              return (
-                <div className="w-full h-full relative bg-[#1877F2] overflow-hidden rounded-[inherit]">
-                  {embedSrc ? (
+            /* FACEBOOK BLOCK */
+            <div className="w-full h-full relative overflow-hidden bg-[#f0f2f5] flex items-center justify-center">
+              {(() => {
+                const fbSrc = extractFacebookSrc(block.content);
+                if (fbSrc) {
+                  return (
                     <iframe
-                      src={embedSrc}
+                      src={fbSrc}
                       width="100%"
                       height="100%"
-                      className="absolute inset-0 w-full h-full"
                       style={{ border: 'none', overflow: 'hidden' }}
                       scrolling="no"
+                      frameBorder="0"
+                      allowFullScreen={true}
                       allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white text-sm opacity-60">
-                      Facebook embed
-                    </div>
-                  )}
+                      className="absolute inset-0 pointer-events-none group-hover:pointer-events-auto"
+                    ></iframe>
+                  );
+                }
+                return (
+                  <div className="text-gray-400 text-xs font-medium text-center p-4">
+                    Enter a Facebook Page or Video URL
+                  </div>
+                );
+              })()}
+              {block.title && !block.content && (
+                <div className="absolute bottom-0 left-0 right-0 p-2 md:p-3 bg-gradient-to-t from-black/60 to-transparent z-10 pointer-events-none">
+                  <p className={`font-semibold text-white drop-shadow ${textSizes.overlayTitle}`}>
+                    {block.title}
+                  </p>
                 </div>
-              );
-            })()
+              )}
+            </div>
           ) : block.type === BlockType.MAP ? (
             /* MAP BLOCK - Clean minimal */
             <div className="w-full h-full relative bg-gray-100 overflow-hidden">

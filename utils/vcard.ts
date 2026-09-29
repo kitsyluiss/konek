@@ -31,17 +31,21 @@ export const downloadVCard = (contact: BlockData['contactInfo']) => {
   if (!contact) return;
   const vcard = generateVCard(contact);
 
-  // Use a data URI to force native OS handling (especially for iOS Safari)
-  // which will immediately open the Contacts app instead of the Downloads folder.
+  // Use a data URI to force native OS handling
   const dataUri = `data:text/vcard;charset=utf-8,${encodeURIComponent(vcard)}`;
-
-  // By omitting the 'download' attribute and using target='_blank', 
-  // mobile devices will typically open the contact card immediately instead of downloading a file.
   const link = document.createElement('a');
   link.href = dataUri;
   link.target = '_blank';
   link.rel = 'noopener noreferrer';
-  // Deliberately omitting link.download so the browser opens it instead of saving it to Files
+
+  // Android requires the download attribute to properly trigger the file download
+  // manager, which then prompts the user to open it in Contacts.
+  // iOS Safari works best WITHOUT the download attribute, opening the contact sheet natively.
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  if (isAndroid) {
+    const name = `${contact.firstName || 'contact'}_${contact.lastName || ''}`.trim();
+    link.download = `${name || 'contact'}.vcf`;
+  }
 
   document.body.appendChild(link);
   link.click();

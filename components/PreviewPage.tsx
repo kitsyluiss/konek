@@ -14,6 +14,34 @@ import { getMobileLayout, MOBILE_GRID_CONFIG } from '../utils/mobileLayout';
 const PreviewPage: React.FC = () => {
   const [konek, setKonek] = useState<SavedKonek | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLandscape, setIsLandscape] = useState(false);
+
+  // Lock orientation to portrait on supported devices (mobile browsers)
+  useEffect(() => {
+    // Try native Screen Orientation API lock first (works on Android Chrome/PWA)
+    const tryLock = async () => {
+      try {
+        if (screen.orientation && 'lock' in screen.orientation) {
+          await screen.orientation.lock('portrait');
+        }
+      } catch {
+        // Silently fail on desktop or unsupported browsers
+      }
+    };
+    tryLock();
+
+    // CSS fallback: detect landscape and show a "please rotate" overlay
+    const checkOrientation = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight);
+    };
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
+  }, []);
 
   useEffect(() => {
     const init = async () => {
@@ -102,6 +130,51 @@ const PreviewPage: React.FC = () => {
 
   const profile = konek.data.profile;
   const blocks = konek.data.blocks;
+
+  // Portrait-only: show a rotation prompt if user is in landscape
+  if (isLandscape) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          background: 'linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '1.5rem',
+          color: 'white',
+          fontFamily: 'Inter, sans-serif',
+        }}
+      >
+        {/* Animated rotate phone icon */}
+        <div
+          style={{
+            fontSize: '4rem',
+            animation: 'rotate-hint 1.8s ease-in-out infinite',
+          }}
+        >
+          📱
+        </div>
+        <style>{`
+          @keyframes rotate-hint {
+            0%   { transform: rotate(0deg); }
+            30%  { transform: rotate(90deg); }
+            70%  { transform: rotate(90deg); }
+            100% { transform: rotate(0deg); }
+          }
+        `}</style>
+        <p style={{ fontSize: '1.1rem', fontWeight: 600, textAlign: 'center', margin: 0 }}>
+          Please rotate your device
+        </p>
+        <p style={{ fontSize: '0.85rem', opacity: 0.5, textAlign: 'center', margin: 0 }}>
+          This profile is best viewed in portrait mode
+        </p>
+      </div>
+    );
+  }
 
   // Sort blocks for mobile (by row, then column)
   const sortedBlocks = [...blocks].sort((a, b) => {

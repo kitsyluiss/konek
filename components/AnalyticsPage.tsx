@@ -120,14 +120,14 @@ const AnalyticsPage: React.FC = () => {
     if (!initialLoading && projectUrl && dbPassword && !isConfigured) {
       fetchAnalytics();
     }
-  }, [initialLoading, projectUrl, dbPassword]);
+  }, [initialLoading, projectUrl, dbPassword, isConfigured, fetchAnalytics]);
 
   // Auto-refresh when days change (if already configured)
   useEffect(() => {
     if (isConfigured && projectUrl && dbPassword) {
       fetchAnalytics(days);
     }
-  }, [days]);
+  }, [days, isConfigured, projectUrl, dbPassword, fetchAnalytics]);
 
   // Compute analytics stats
   const stats = useMemo(() => {

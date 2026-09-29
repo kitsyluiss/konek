@@ -1172,7 +1172,7 @@ const Block: React.FC<BlockProps> = ({
                   <Contact size={24} className={block.textColor || 'text-black'} />
                 )}
               </div>
-              <h3 className={`font-bold ${textSizes.title} line-clamp-1`}>
+              <h3 className={`font-bold ${textSizes.titleDefault} line-clamp-1`}>
                 {block.title || 'Save to Contacts'}
               </h3>
               {(block.contactInfo?.firstName || block.contactInfo?.lastName) && (

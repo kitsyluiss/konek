@@ -1,0 +1,60 @@
+{
+  "id": "default",
+  "name": "My Bento",
+  "version": "1.0",
+  "profile": {
+    "name": "My Bento",
+    "bio": "Digital creator & developer.\nBuilding awesome things.",
+    "avatarUrl": "",
+    "theme": "light",
+    "primaryColor": "blue",
+    "showBranding": true,
+    "analytics": {
+      "enabled": false,
+      "supabaseUrl": ""
+    },
+    "socialAccounts": []
+  },
+  "blocks": [
+    {
+      "id": "block_1",
+      "type": "LINK",
+      "title": "My Website",
+      "subtext": "Visit my portfolio",
+      "content": "https://example.com",
+      "colSpan": 3,
+      "rowSpan": 3,
+      "gridColumn": 1,
+      "gridRow": 1,
+      "color": "bg-gray-900",
+      "textColor": "text-white"
+    },
+    {
+      "id": "block_2",
+      "type": "SOCIAL",
+      "title": "Follow me",
+      "subtext": "@username",
+      "content": "",
+      "colSpan": 3,
+      "rowSpan": 3,
+      "gridColumn": 4,
+      "gridRow": 1,
+      "color": "bg-violet-500",
+      "textColor": "text-white",
+      "socialPlatform": "instagram",
+      "socialHandle": ""
+    },
+    {
+      "id": "block_3",
+      "type": "TEXT",
+      "title": "Hello!",
+      "content": "Welcome to my bento. Click blocks to edit them.",
+      "colSpan": 3,
+      "rowSpan": 3,
+      "gridColumn": 7,
+      "gridRow": 1,
+      "color": "bg-white",
+      "textColor": "text-gray-900"
+    }
+  ]
+}

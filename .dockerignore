@@ -1,0 +1,54 @@
+# Dependencies
+node_modules
+npm-debug.log
+yarn.lock
+
+# Build output
+dist
+build
+
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+*.md
+README.md
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+LICENSE
+ANALYTICS.md
+
+# Configuration locale
+.env
+.env.local
+.env.*.local
+.supabase-config.json
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cursor
+.cursor
+
+# Logs
+logs
+*.log
+
+# Test
+coverage
+.nyc_output
+
+# Temporary
+tmp
+temp
+

@@ -291,7 +291,7 @@ const BlockPreview: React.FC<BlockPreviewProps> = ({
             openSafeUrl(url);
           }
         }}
-        className={`bento-item relative overflow-hidden h-full ${block.color || 'bg-white'} transition-all duration-200 group flex items-center justify-center shadow-sm border border-gray-100 hover:shadow-md`}
+        className={`konek-item relative overflow-hidden h-full ${block.color || 'bg-white'} transition-all duration-200 group flex items-center justify-center shadow-sm border border-gray-100 hover:shadow-md`}
         style={{
           ...gridPositionStyle,
           borderRadius,
@@ -311,7 +311,7 @@ const BlockPreview: React.FC<BlockPreviewProps> = ({
     return (
       <div
         onClick={handleClick}
-        className={`bento-item group relative overflow-hidden ${block.color || 'bg-white'} cursor-pointer h-full ring-1 ring-black/5 shadow-sm hover:shadow-xl transition-all duration-300`}
+        className={`konek-item group relative overflow-hidden ${block.color || 'bg-white'} cursor-pointer h-full ring-1 ring-black/5 shadow-sm hover:shadow-xl transition-all duration-300`}
         style={{
           ...gridPositionStyle,
           borderRadius,
@@ -390,7 +390,7 @@ const BlockPreview: React.FC<BlockPreviewProps> = ({
         onMouseLeave={enableTiltEffect ? onTiltLeave : undefined}
         onMouseEnter={enableTiltEffect ? onTiltEnter : undefined}
         style={{ ...finalStyle, borderRadius, ...tiltWrapperStyle }}
-        className={`bento-item group relative overflow-hidden w-full h-full ${!block.customBackground && !isLinkWithImage && !isRichYoutube ? block.color || 'bg-white' : ''} ${block.textColor || 'text-gray-900'} ring-1 ring-black/5 shadow-sm ${!enableTiltEffect ? 'hover:shadow-xl' : ''} transition-all duration-300`}
+        className={`konek-item group relative overflow-hidden w-full h-full ${!block.customBackground && !isLinkWithImage && !isRichYoutube ? block.color || 'bg-white' : ''} ${block.textColor || 'text-gray-900'} ring-1 ring-black/5 shadow-sm ${!enableTiltEffect ? 'hover:shadow-xl' : ''} transition-all duration-300`}
       >
         {/* Glare effect */}
         {enableTiltEffect && (

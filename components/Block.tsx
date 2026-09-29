@@ -556,7 +556,7 @@ const Block: React.FC<BlockProps> = ({
         }}
         data-block-id={block.id}
         className={`
-          bento-item relative cursor-pointer overflow-hidden h-full
+          konek-item relative cursor-pointer overflow-hidden h-full
           ${block.color || 'bg-white'}
           ${isSelected ? 'ring-2 ring-violet-500 shadow-lg' : 'hover:ring-2 hover:ring-gray-300 hover:shadow-md'}
           ${isDragTarget ? 'ring-2 ring-violet-500 bg-violet-50/50 scale-105' : ''}
@@ -720,7 +720,7 @@ const Block: React.FC<BlockProps> = ({
           borderRadius,
           ...(block.customBackground ? { background: block.customBackground } : {}),
         }}
-        className={`bento-item group relative overflow-hidden ${block.color || 'bg-white'} ${colClass} ${rowClass} cursor-pointer h-full
+        className={`konek-item group relative overflow-hidden ${block.color || 'bg-white'} ${colClass} ${rowClass} cursor-pointer h-full
           ${isSelected ? 'ring-4 ring-blue-500 shadow-xl z-20' : 'ring-1 ring-black/5'}
           ${!isSelected ? 'shadow-sm hover:shadow-xl' : ''}
           ${isDragTarget ? 'ring-2 ring-violet-500 z-20 scale-[1.02]' : ''}
@@ -893,7 +893,7 @@ const Block: React.FC<BlockProps> = ({
         onMouseLeave={enableTiltEffect ? onTiltLeave : undefined}
         onMouseEnter={enableTiltEffect ? onTiltEnter : undefined}
         style={{ ...finalStyle, borderRadius, ...tiltWrapperStyle }}
-        className={`bento-item group relative overflow-hidden w-full h-full ${!block.customBackground && !isLinkWithImage && !isRichYoutube ? block.color || 'bg-white' : ''} ${block.textColor || 'text-gray-900'}
+        className={`konek-item group relative overflow-hidden w-full h-full ${!block.customBackground && !isLinkWithImage && !isRichYoutube ? block.color || 'bg-white' : ''} ${block.textColor || 'text-gray-900'}
           ${isSelected ? 'ring-4 ring-blue-500 shadow-xl' : 'ring-1 ring-black/5'}
           ${!isSelected && !enableTiltEffect ? 'shadow-sm hover:shadow-xl' : 'shadow-sm'}
           ${isDragTarget ? 'ring-2 ring-violet-500' : ''}

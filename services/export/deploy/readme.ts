@@ -9,7 +9,7 @@ export const generateDeployMd = (params: {
   target: ExportDeploymentTarget;
 }): string => `# Deploy ${params.name}
 
-This is a React/Vite/Tailwind project exported from OpenBento.
+This is a React/Vite/Tailwind project exported from Konek.
 
 ## Quick Start
 
@@ -48,8 +48,8 @@ ${
 ${
   params.target === 'docker'
     ? `\`\`\`bash
-docker build -t my-bento .
-docker run -p 8080:80 my-bento
+docker build -t my-konek .
+docker run -p 8080:80 my-konek
 \`\`\``
     : ''
 }

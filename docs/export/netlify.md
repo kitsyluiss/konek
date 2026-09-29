@@ -8,7 +8,7 @@ The fastest way to deploy:
 
 1. Build your project locally:
    ```bash
-   cd my-bento
+   cd my-konek
    npm install
    npm run build
    ```
@@ -21,11 +21,11 @@ The fastest way to deploy:
 ### Step 1: Push to Git
 
 ```bash
-cd my-bento
+cd my-konek
 git init
 git add .
 git commit -m "Initial commit"
-git remote add origin https://github.com/username/my-bento.git
+git remote add origin https://github.com/username/my-konek.git
 git push -u origin main
 ```
 
@@ -50,7 +50,7 @@ npm i -g netlify-cli
 ### Deploy
 
 ```bash
-cd my-bento
+cd my-konek
 npm run build
 netlify deploy --dir=dist
 ```
@@ -137,5 +137,5 @@ Ensure the redirect rule is in `netlify.toml`:
 - **Pro** ($19/month) - More bandwidth, team features
 - **Business** ($99/month) - Advanced features
 
-Most bentos work great on the free tier.
+Most koneks work great on the free tier.
 

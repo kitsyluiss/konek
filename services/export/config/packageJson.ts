@@ -6,7 +6,7 @@ export const generatePackageJson = (name: string): string => {
   const safeName = name.replace(/[^a-z0-9-]/gi, '-').toLowerCase();
   return JSON.stringify(
     {
-      name: safeName || 'my-bento',
+      name: safeName || 'my-konek',
       private: true,
       version: '1.0.0',
       type: 'module',

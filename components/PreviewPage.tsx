@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import type { AvatarStyle, SavedBento } from '../types';
+import type { AvatarStyle, SavedKonek } from '../types';
 import {
-  getBento,
-  getOrCreateActiveBento,
-  setActiveBentoId,
-  getAllBentos,
-  importBentoFromJSON,
+  getKonek,
+  getOrCreateActiveKonek,
+  setActiveKonekId,
+  getAllKoneks,
+  importKonekFromJSON,
 } from '../services/storageService';
 import Block from './Block';
 import { buildSocialUrl, formatFollowerCount, getSocialPlatformOption } from '../socialPlatforms';
 import { getMobileLayout, MOBILE_GRID_CONFIG } from '../utils/mobileLayout';
 
 const PreviewPage: React.FC = () => {
-  const [bento, setBento] = useState<SavedBento | null>(null);
+  const [konek, setKonek] = useState<SavedKonek | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -27,26 +27,26 @@ const PreviewPage: React.FC = () => {
 
       // If we have a slug, try to find it
       if (slug) {
-        // 1. Check local storage bentos for matching slug
-        const localBentos = getAllBentos();
-        const matchedBento = localBentos.find((b) => b.data.profile.slug === slug || b.id === slug);
+        // 1. Check local storage koneks for matching slug
+        const localKoneks = getAllKoneks();
+        const matchedKonek = localKoneks.find((b) => b.data.profile.slug === slug || b.id === slug);
 
-        if (matchedBento) {
-          setBento(matchedBento);
+        if (matchedKonek) {
+          setKonek(matchedKonek);
           return;
         }
 
-        // 2. Try fetching from public /bentos/ folder
+        // 2. Try fetching from public /koneks/ folder
         try {
-          const res = await fetch(`/bentos/${slug}.json`);
+          const res = await fetch(`/koneks/${slug}.json`);
           if (res.ok) {
             const json = await res.json();
-            const imported = importBentoFromJSON(json);
-            setBento(imported);
+            const imported = importKonekFromJSON(json);
+            setKonek(imported);
             return;
           }
         } catch (e) {
-          console.error('Failed to fetch remote bento:', e);
+          console.error('Failed to fetch remote konek:', e);
         }
 
         setError('Profile not found.');
@@ -55,10 +55,10 @@ const PreviewPage: React.FC = () => {
 
       // Fallback for normal preview
       const requestedId = params.get('id')?.trim();
-      const requested = requestedId ? getBento(requestedId) : null;
-      const resolved = requested || getOrCreateActiveBento();
-      if (requested) setActiveBentoId(requested.id);
-      setBento(resolved);
+      const requested = requestedId ? getKonek(requestedId) : null;
+      const resolved = requested || getOrCreateActiveKonek();
+      if (requested) setActiveKonekId(requested.id);
+      setKonek(resolved);
     };
 
     init();
@@ -92,7 +92,7 @@ const PreviewPage: React.FC = () => {
     );
   }
 
-  if (!bento) {
+  if (!konek) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-400">
         Loading...
@@ -100,8 +100,8 @@ const PreviewPage: React.FC = () => {
     );
   }
 
-  const profile = bento.data.profile;
-  const blocks = bento.data.blocks;
+  const profile = konek.data.profile;
+  const blocks = konek.data.blocks;
 
   // Sort blocks for mobile (by row, then column)
   const sortedBlocks = [...blocks].sort((a, b) => {
@@ -343,12 +343,12 @@ const PreviewPage: React.FC = () => {
             <p className="text-sm text-gray-400 font-medium">
               Made with <span className="text-red-400">♥</span> using{' '}
               <a
-                href="https://github.com/yoanbernabeu/openbento"
+                href="https://github.com/yoanbernabeu/konek"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-semibold hover:text-violet-500 transition-colors"
               >
-                OpenBento
+                Konek
               </a>
             </p>
           </footer>

@@ -98,7 +98,7 @@ export const exportSite = async (
   const content = await zip.generateAsync({ type: 'blob' });
   saveAs(
     content,
-    `${data.profile.name.replace(/\s+/g, '-').toLowerCase()}-bento-${deploymentTarget}.zip`
+    `${data.profile.name.replace(/\s+/g, '-').toLowerCase()}-konek-${deploymentTarget}.zip`
   );
 };
 

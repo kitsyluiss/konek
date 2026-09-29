@@ -1,6 +1,6 @@
-# Quick Start: Deploy Your Bento
+# Quick Start: Deploy Your Konek
 
-Deploy your bento in under 5 minutes.
+Deploy your konek in under 5 minutes.
 
 ## Step 1: Export
 
@@ -9,8 +9,8 @@ In the builder, click **Export** and download the ZIP file.
 ## Step 2: Extract
 
 ```bash
-unzip my-bento.zip
-cd my-bento
+unzip my-konek.zip
+cd my-konek
 ```
 
 ## Step 3: Deploy to Vercel (Easiest)
@@ -23,7 +23,7 @@ npm i -g vercel
 vercel
 ```
 
-Follow the prompts. Done! Your bento is live.
+Follow the prompts. Done! Your konek is live.
 
 ## Alternative: Drag & Drop
 

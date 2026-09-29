@@ -144,7 +144,7 @@ export interface SiteData {
   gridVersion?: number;
 }
 
-export interface SavedBento {
+export interface SavedKonek {
   id: string;
   name: string;
   createdAt: number;

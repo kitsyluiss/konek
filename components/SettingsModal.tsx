@@ -32,8 +32,8 @@ type SettingsModalProps = {
   onClose: () => void;
   profile: UserProfile;
   setProfile: (next: UserProfile | ((prev: UserProfile) => UserProfile)) => void;
-  bentoName?: string;
-  onBentoNameChange?: (name: string) => void;
+  konekName?: string;
+  onKonekNameChange?: (name: string) => void;
   // For raw JSON editing
   blocks?: BlockData[];
   onBlocksChange?: (blocks: BlockData[]) => void;
@@ -46,8 +46,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
   profile,
   setProfile,
-  bentoName,
-  onBentoNameChange,
+  konekName,
+  onKonekNameChange,
   blocks,
   onBlocksChange,
 }) => {
@@ -81,7 +81,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   // Load saved config on mount
   useEffect(() => {
     if (isOpen && activeTab === 'analytics') {
-      fetch('/__openbento/config')
+      fetch('/__konek/config')
         .then((r) => r.json())
         .then((data) => {
           if (data.ok && data.config) {
@@ -111,7 +111,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     setSetupResult(null);
 
     try {
-      const res = await fetch('/__openbento/supabase/simple-setup', {
+      const res = await fetch('/__konek/supabase/simple-setup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -152,14 +152,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   useEffect(() => {
     if (isOpen && activeTab === 'json') {
       const fullConfig = {
-        name: bentoName || 'My Bento',
+        name: konekName || 'My Konek',
         profile,
         blocks: blocks || [],
       };
       setJsonText(JSON.stringify(fullConfig, null, 2));
       setJsonError(null);
     }
-  }, [isOpen, activeTab, profile, blocks, bentoName]);
+  }, [isOpen, activeTab, profile, blocks, konekName]);
 
   const addSocialAccount = () => {
     if (!newHandle.trim()) return;
@@ -241,8 +241,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       }
 
       // Apply changes
-      if (parsed.name && onBentoNameChange) {
-        onBentoNameChange(parsed.name);
+      if (parsed.name && onKonekNameChange) {
+        onKonekNameChange(parsed.name);
       }
       setProfile(parsed.profile);
       if (onBlocksChange) {
@@ -328,11 +328,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               {/* GENERAL TAB */}
               {activeTab === 'general' && (
                 <>
-                  {/* Bento Name */}
-                  {onBentoNameChange && (
+                  {/* Konek Name */}
+                  {onKonekNameChange && (
                     <section className="space-y-3">
                       <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                        Bento
+                        Konek
                       </h3>
                       <div className="p-3 bg-white border border-gray-200 rounded-xl">
                         <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
@@ -341,10 +341,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                         <input
                           type="text"
                           aria-label="Project name"
-                          value={bentoName || ''}
-                          onChange={(e) => onBentoNameChange(e.target.value)}
+                          value={konekName || ''}
+                          onChange={(e) => onKonekNameChange(e.target.value)}
                           className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-medium text-gray-800 focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 focus:outline-none transition-all"
-                          placeholder="My Bento"
+                          placeholder="My Konek"
                         />
                         <p className="text-[10px] text-gray-400 mt-1.5">
                           Used as filename when exporting JSON
@@ -473,9 +473,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     </h3>
                     <div className="flex items-center justify-between gap-4 p-3 bg-white border border-gray-200 rounded-xl">
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-gray-900">Show OpenBento credit</p>
+                        <p className="text-sm font-semibold text-gray-900">Show Konek credit</p>
                         <p className="text-xs text-gray-400">
-                          Displays the OpenBento footer in the builder and export.
+                          Displays the Konek footer in the builder and export.
                         </p>
                       </div>
                       <button
@@ -490,7 +490,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                           profile.showBranding !== false ? 'bg-gray-900' : 'bg-gray-200'
                         }`}
                         aria-pressed={profile.showBranding !== false}
-                        aria-label="Toggle OpenBento branding"
+                        aria-label="Toggle Konek branding"
                       >
                         <span
                           className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
@@ -1094,7 +1094,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                           openGraph: { ...profile.openGraph, siteName: e.target.value },
                         })
                       }
-                      placeholder="My Bento"
+                      placeholder="My Konek"
                       className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
@@ -1218,7 +1218,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                       Supabase Analytics
                     </h3>
                     <p className="text-sm text-gray-500">
-                      Track page views and clicks on your exported bento. This requires a Supabase
+                      Track page views and clicks on your exported konek. This requires a Supabase
                       project.
                     </p>
                   </div>
@@ -1317,7 +1317,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                       aria-label="Save analytics configuration"
                       onClick={() => {
                         if (!supabaseProjectUrl || !supabaseAnonKey) return;
-                        fetch('/__openbento/config', {
+                        fetch('/__konek/config', {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({
@@ -1473,7 +1473,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     </p>
                     <ul className="list-disc list-inside space-y-0.5 text-gray-500">
                       <li>
-                        <code>name</code>: Bento project name
+                        <code>name</code>: Konek project name
                       </li>
                       <li>
                         <code>profile</code>: User profile (name, bio, avatarUrl, etc.)

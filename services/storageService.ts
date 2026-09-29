@@ -1,10 +1,10 @@
-import { SavedBento, SiteData, BlockType, BlockData, UserProfile } from '../types';
+import { SavedKonek, SiteData, BlockType, BlockData, UserProfile } from '../types';
 import { AVATAR_PLACEHOLDER } from '../constants';
 
-const STORAGE_KEY = 'openbento_bentos';
-const ACTIVE_BENTO_KEY = 'openbento_active_bento';
-const ASSETS_KEY = 'openbento_assets';
-const INITIALIZED_KEY = 'openbento_initialized';
+const STORAGE_KEY = 'konek_koneks';
+const ACTIVE_BENTO_KEY = 'konek_active_konek';
+const ASSETS_KEY = 'konek_assets';
+const INITIALIZED_KEY = 'konek_initialized';
 export const GRID_VERSION = 2;
 
 // Asset type for uploaded images
@@ -16,8 +16,8 @@ export interface Asset {
   createdAt: number;
 }
 
-// Bento JSON format (for export/import)
-export interface BentoJSON {
+// Konek JSON format (for export/import)
+export interface KonekJSON {
   id: string;
   name: string;
   version: string;
@@ -29,66 +29,66 @@ export interface BentoJSON {
 
 // Generate unique ID
 const generateId = (): string => {
-  return `bento_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `konek_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 };
 
 // ============ BENTO STORAGE ============
 
-// Get all saved bentos
-export const getAllBentos = (): SavedBento[] => {
+// Get all saved koneks
+export const getAllKoneks = (): SavedKonek[] => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return [];
     return JSON.parse(stored);
   } catch (e) {
-    console.error('Failed to get bentos from localStorage:', e);
+    console.error('Failed to get koneks from localStorage:', e);
     return [];
   }
 };
 
-// Get a specific bento by ID
-export const getBento = (id: string): SavedBento | null => {
-  const bentos = getAllBentos();
-  return bentos.find((b) => b.id === id) || null;
+// Get a specific konek by ID
+export const getKonek = (id: string): SavedKonek | null => {
+  const koneks = getAllKoneks();
+  return koneks.find((b) => b.id === id) || null;
 };
 
-// Save a bento (create or update)
-export const saveBento = (bento: SavedBento): void => {
+// Save a konek (create or update)
+export const saveKonek = (konek: SavedKonek): void => {
   try {
-    const bentos = getAllBentos();
-    const existingIndex = bentos.findIndex((b) => b.id === bento.id);
+    const koneks = getAllKoneks();
+    const existingIndex = koneks.findIndex((b) => b.id === konek.id);
 
-    const updatedBento = {
-      ...bento,
+    const updatedKonek = {
+      ...konek,
       updatedAt: Date.now(),
     };
 
     if (existingIndex >= 0) {
-      bentos[existingIndex] = updatedBento;
+      koneks[existingIndex] = updatedKonek;
     } else {
-      bentos.push(updatedBento);
+      koneks.push(updatedKonek);
     }
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(bentos));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(koneks));
   } catch (e) {
-    console.error('Failed to save bento to localStorage:', e);
+    console.error('Failed to save konek to localStorage:', e);
   }
 };
 
-// Create a new bento from JSON template
-export const createBentoFromJSON = async (
-  templatePath: string = '/bentos/default.json'
-): Promise<SavedBento> => {
+// Create a new konek from JSON template
+export const createKonekFromJSON = async (
+  templatePath: string = '/koneks/default.json'
+): Promise<SavedKonek> => {
   try {
     const response = await fetch(templatePath);
     if (!response.ok) throw new Error('Failed to load template');
 
-    const template: BentoJSON = await response.json();
+    const template: KonekJSON = await response.json();
     const now = Date.now();
 
-    const newBento: SavedBento = {
+    const newKonek: SavedKonek = {
       id: generateId(),
-      name: template.name || 'My Bento',
+      name: template.name || 'My Konek',
       createdAt: now,
       updatedAt: now,
       data: {
@@ -104,29 +104,29 @@ export const createBentoFromJSON = async (
       },
     };
 
-    saveBento(newBento);
-    setActiveBentoId(newBento.id);
+    saveKonek(newKonek);
+    setActiveKonekId(newKonek.id);
 
-    return newBento;
+    return newKonek;
   } catch (e) {
-    console.error('Failed to create bento from JSON:', e);
+    console.error('Failed to create konek from JSON:', e);
     // Fallback to default
-    return createBento('My Bento');
+    return createKonek('My Konek');
   }
 };
 
-// Create a new bento with default data
-export const createBento = (name: string): SavedBento => {
+// Create a new konek with default data
+export const createKonek = (name: string): SavedKonek => {
   const now = Date.now();
-  const newBento: SavedBento = {
+  const newKonek: SavedKonek = {
     id: generateId(),
-    name: name || `Bento ${getAllBentos().length + 1}`,
+    name: name || `Konek ${getAllKoneks().length + 1}`,
     createdAt: now,
     updatedAt: now,
     data: {
       gridVersion: GRID_VERSION,
       profile: {
-        name: name || 'My Bento',
+        name: name || 'My Konek',
         bio: 'Digital creator & developer.\nBuilding awesome things.',
         avatarUrl: AVATAR_PLACEHOLDER,
         theme: 'light' as const,
@@ -153,28 +153,28 @@ export const createBento = (name: string): SavedBento => {
     },
   };
 
-  saveBento(newBento);
-  setActiveBentoId(newBento.id);
+  saveKonek(newKonek);
+  setActiveKonekId(newKonek.id);
 
-  return newBento;
+  return newKonek;
 };
 
-// Delete a bento
-export const deleteBento = (id: string): void => {
+// Delete a konek
+export const deleteKonek = (id: string): void => {
   try {
-    const bentos = getAllBentos().filter((b) => b.id !== id);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(bentos));
+    const koneks = getAllKoneks().filter((b) => b.id !== id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(koneks));
 
-    if (getActiveBentoId() === id) {
+    if (getActiveKonekId() === id) {
       localStorage.removeItem(ACTIVE_BENTO_KEY);
     }
   } catch (e) {
-    console.error('Failed to delete bento from localStorage:', e);
+    console.error('Failed to delete konek from localStorage:', e);
   }
 };
 
-// Get the currently active bento ID
-export const getActiveBentoId = (): string | null => {
+// Get the currently active konek ID
+export const getActiveKonekId = (): string | null => {
   try {
     return localStorage.getItem(ACTIVE_BENTO_KEY);
   } catch {
@@ -182,12 +182,12 @@ export const getActiveBentoId = (): string | null => {
   }
 };
 
-// Set the active bento ID
-export const setActiveBentoId = (id: string): void => {
+// Set the active konek ID
+export const setActiveKonekId = (id: string): void => {
   try {
     localStorage.setItem(ACTIVE_BENTO_KEY, id);
   } catch (e) {
-    console.error('Failed to set active bento ID:', e);
+    console.error('Failed to set active konek ID:', e);
   }
 };
 
@@ -209,63 +209,63 @@ export const setInitialized = (): void => {
   }
 };
 
-// Get the active bento, or create from template if none exists
-export const getOrCreateActiveBento = (): SavedBento => {
-  const activeId = getActiveBentoId();
+// Get the active konek, or create from template if none exists
+export const getOrCreateActiveKonek = (): SavedKonek => {
+  const activeId = getActiveKonekId();
 
   if (activeId) {
-    const bento = getBento(activeId);
-    if (bento) return bento;
+    const konek = getKonek(activeId);
+    if (konek) return konek;
   }
 
-  // Check if there are any bentos
-  const bentos = getAllBentos();
-  if (bentos.length > 0) {
-    setActiveBentoId(bentos[0].id);
-    return bentos[0];
+  // Check if there are any koneks
+  const koneks = getAllKoneks();
+  if (koneks.length > 0) {
+    setActiveKonekId(koneks[0].id);
+    return koneks[0];
   }
 
-  // Create a new default bento (sync version for backward compatibility)
-  return createBento('My First Bento');
+  // Create a new default konek (sync version for backward compatibility)
+  return createKonek('My First Konek');
 };
 
 // Initialize app - call this on first load to load from template
-export const initializeApp = async (): Promise<SavedBento> => {
-  const activeId = getActiveBentoId();
+export const initializeApp = async (): Promise<SavedKonek> => {
+  const activeId = getActiveKonekId();
 
   if (activeId) {
-    const bento = getBento(activeId);
-    if (bento) return bento;
+    const konek = getKonek(activeId);
+    if (konek) return konek;
   }
 
-  const bentos = getAllBentos();
-  if (bentos.length > 0) {
-    setActiveBentoId(bentos[0].id);
-    return bentos[0];
+  const koneks = getAllKoneks();
+  if (koneks.length > 0) {
+    setActiveKonekId(koneks[0].id);
+    return koneks[0];
   }
 
   // First time: load from default template
-  return createBentoFromJSON('/bentos/default.json');
+  return createKonekFromJSON('/koneks/default.json');
 };
 
-// Update just the data of a bento (for auto-save)
-export const updateBentoData = (id: string, data: SiteData): void => {
-  const bento = getBento(id);
-  if (bento) {
-    saveBento({
-      ...bento,
+// Update just the data of a konek (for auto-save)
+export const updateKonekData = (id: string, data: SiteData): void => {
+  const konek = getKonek(id);
+  if (konek) {
+    saveKonek({
+      ...konek,
       data,
       updatedAt: Date.now(),
     });
   }
 };
 
-// Rename a bento
-export const renameBento = (id: string, newName: string): void => {
-  const bento = getBento(id);
-  if (bento) {
-    saveBento({
-      ...bento,
+// Rename a konek
+export const renameKonek = (id: string, newName: string): void => {
+  const konek = getKonek(id);
+  if (konek) {
+    saveKonek({
+      ...konek,
       name: newName,
       updatedAt: Date.now(),
     });
@@ -274,47 +274,47 @@ export const renameBento = (id: string, newName: string): void => {
 
 // ============ EXPORT / IMPORT ============
 
-// Export a bento to JSON
-export const exportBentoToJSON = (bento: SavedBento): BentoJSON => {
+// Export a konek to JSON
+export const exportKonekToJSON = (konek: SavedKonek): KonekJSON => {
   return {
-    id: bento.id,
-    name: bento.name,
+    id: konek.id,
+    name: konek.name,
     version: '1.0',
-    profile: bento.data.profile,
-    blocks: bento.data.blocks,
-    gridVersion: bento.data.gridVersion ?? GRID_VERSION,
+    profile: konek.data.profile,
+    blocks: konek.data.blocks,
+    gridVersion: konek.data.gridVersion ?? GRID_VERSION,
     exportedAt: Date.now(),
   };
 };
 
-// Download a bento as JSON file
-export const downloadBentoJSON = (bento: SavedBento): void => {
-  const json = exportBentoToJSON(bento);
+// Download a konek as JSON file
+export const downloadKonekJSON = (konek: SavedKonek): void => {
+  const json = exportKonekToJSON(konek);
   const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
 
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${bento.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
+  a.download = `${konek.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 };
 
-// Import a bento from JSON
-export const importBentoFromJSON = (json: BentoJSON): SavedBento => {
+// Import a konek from JSON
+export const importKonekFromJSON = (json: KonekJSON): SavedKonek => {
   const now = Date.now();
 
-  const newBento: SavedBento = {
+  const newKonek: SavedKonek = {
     id: generateId(), // Always generate new ID to avoid conflicts
-    name: json.name || 'Imported Bento',
+    name: json.name || 'Imported Konek',
     createdAt: now,
     updatedAt: now,
     data: {
       gridVersion: json.gridVersion ?? GRID_VERSION,
       profile: {
-        name: json.profile?.name || 'My Bento',
+        name: json.profile?.name || 'My Konek',
         bio: json.profile?.bio || '',
         avatarUrl: json.profile?.avatarUrl || AVATAR_PLACEHOLDER,
         theme: json.profile?.theme || 'light',
@@ -330,22 +330,22 @@ export const importBentoFromJSON = (json: BentoJSON): SavedBento => {
     },
   };
 
-  saveBento(newBento);
-  setActiveBentoId(newBento.id);
+  saveKonek(newKonek);
+  setActiveKonekId(newKonek.id);
 
-  return newBento;
+  return newKonek;
 };
 
-// Load bento from file input
-export const loadBentoFromFile = (file: File): Promise<SavedBento> => {
+// Load konek from file input
+export const loadKonekFromFile = (file: File): Promise<SavedKonek> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
     reader.onload = (e) => {
       try {
-        const json = JSON.parse(e.target?.result as string) as BentoJSON;
-        const bento = importBentoFromJSON(json);
-        resolve(bento);
+        const json = JSON.parse(e.target?.result as string) as KonekJSON;
+        const konek = importKonekFromJSON(json);
+        resolve(konek);
       } catch {
         reject(new Error('Invalid JSON file'));
       }

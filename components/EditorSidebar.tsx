@@ -1077,9 +1077,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
 
       {profile.showBranding !== false && (
         <div className="p-4 bg-gray-50 border-t border-gray-100">
-          <p className="text-xs text-center text-gray-400 font-medium">
-            OpenBento &bull; Open Source
-          </p>
+          <p className="text-xs text-center text-gray-400 font-medium">Konek &bull; Open Source</p>
         </div>
       )}
     </aside>

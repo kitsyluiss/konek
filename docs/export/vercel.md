@@ -1,6 +1,6 @@
 # Deploy to Vercel
 
-Vercel is the easiest way to deploy your bento. Zero configuration required.
+Vercel is the easiest way to deploy your konek. Zero configuration required.
 
 ## Option 1: Git Integration (Recommended)
 
@@ -9,11 +9,11 @@ Vercel is the easiest way to deploy your bento. Zero configuration required.
 Upload your exported project to GitHub, GitLab, or Bitbucket:
 
 ```bash
-cd my-bento
+cd my-konek
 git init
 git add .
 git commit -m "Initial commit"
-git remote add origin https://github.com/username/my-bento.git
+git remote add origin https://github.com/username/my-konek.git
 git push -u origin main
 ```
 
@@ -26,7 +26,7 @@ git push -u origin main
 
 ### Step 3: Done!
 
-Your bento is live at `https://my-bento.vercel.app`
+Your konek is live at `https://my-konek.vercel.app`
 
 ## Option 2: Vercel CLI
 
@@ -39,7 +39,7 @@ npm i -g vercel
 ### Deploy
 
 ```bash
-cd my-bento
+cd my-konek
 vercel
 ```
 
@@ -110,9 +110,9 @@ The included `vercel.json` handles client-side routing. If you modified it, ensu
 
 ## Pricing
 
-- **Hobby** (Free) - Perfect for personal bentos
+- **Hobby** (Free) - Perfect for personal koneks
 - **Pro** ($20/month) - Custom domains, more bandwidth
 - **Enterprise** - For teams
 
-Most bentos work great on the free tier.
+Most koneks work great on the free tier.
 

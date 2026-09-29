@@ -51,7 +51,7 @@ const AnalyticsPage: React.FC = () => {
   const [dbPassword, setDbPassword] = useState(() => {
     // Load from sessionStorage if available
     if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('openbento_db_password') || '';
+      return sessionStorage.getItem('konek_db_password') || '';
     }
     return '';
   });
@@ -62,19 +62,19 @@ const AnalyticsPage: React.FC = () => {
   // Save password to sessionStorage when it changes
   useEffect(() => {
     if (dbPassword) {
-      sessionStorage.setItem('openbento_db_password', dbPassword);
+      sessionStorage.setItem('konek_db_password', dbPassword);
     }
   }, [dbPassword]);
 
   // Load config on mount and auto-fetch if password is saved
   useEffect(() => {
-    fetch('/__openbento/config')
+    fetch('/__konek/config')
       .then((r) => r.json())
       .then((data) => {
         if (data.ok && data.config?.projectUrl) {
           setProjectUrl(data.config.projectUrl);
           // If we have both URL and saved password, auto-fetch
-          const savedPassword = sessionStorage.getItem('openbento_db_password');
+          const savedPassword = sessionStorage.getItem('konek_db_password');
           if (savedPassword) {
             setDbPassword(savedPassword);
           }
@@ -95,7 +95,7 @@ const AnalyticsPage: React.FC = () => {
     setError(null);
 
     try {
-      const res = await fetch('/__openbento/analytics/fetch', {
+      const res = await fetch('/__konek/analytics/fetch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ projectUrl, dbPassword, days: daysToFetch }),

@@ -1,31 +1,31 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { SavedBento } from '../types';
-import { getAllBentos, createBento, deleteBento } from '../services/storageService';
+import { SavedKonek } from '../types';
+import { getAllKoneks, createKonek, deleteKonek } from '../services/storageService';
 import { ChevronDown, Plus, FolderOpen, Check, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ProfileDropdownProps {
-  activeBentoId: string;
-  activeBentoName: string;
-  onBentoChange: (bento: SavedBento) => void;
+  activeKonekId: string;
+  activeKonekName: string;
+  onKonekChange: (konek: SavedKonek) => void;
 }
 
 const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
-  activeBentoId,
-  activeBentoName,
-  onBentoChange,
+  activeKonekId,
+  activeKonekName,
+  onKonekChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [bentos, setBentos] = useState<SavedBento[]>([]);
+  const [koneks, setKoneks] = useState<SavedKonek[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [newName, setNewName] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Load bentos when dropdown opens
+  // Load koneks when dropdown opens
   useEffect(() => {
     if (isOpen) {
-      setBentos(getAllBentos());
+      setKoneks(getAllKoneks());
     }
   }, [isOpen]);
 
@@ -50,10 +50,10 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleCreateBento = () => {
+  const handleCreateKonek = () => {
     if (newName.trim()) {
-      const newBento = createBento(newName.trim());
-      onBentoChange(newBento);
+      const newKonek = createKonek(newName.trim());
+      onKonekChange(newKonek);
       setIsCreating(false);
       setNewName('');
       setIsOpen(false);
@@ -62,33 +62,33 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleCreateBento();
+      handleCreateKonek();
     } else if (e.key === 'Escape') {
       setIsCreating(false);
       setNewName('');
     }
   };
 
-  const handleDeleteBento = (e: React.MouseEvent, bentoId: string) => {
+  const handleDeleteKonek = (e: React.MouseEvent, konekId: string) => {
     e.stopPropagation();
 
-    const bentoToDelete = bentos.find((b) => b.id === bentoId);
-    if (!bentoToDelete) return;
+    const konekToDelete = koneks.find((b) => b.id === konekId);
+    if (!konekToDelete) return;
 
-    const confirmDelete = window.confirm(`Delete "${bentoToDelete.name}"? This cannot be undone.`);
+    const confirmDelete = window.confirm(`Delete "${konekToDelete.name}"? This cannot be undone.`);
     if (!confirmDelete) return;
 
-    deleteBento(bentoId);
-    const updatedBentos = getAllBentos();
-    setBentos(updatedBentos);
+    deleteKonek(konekId);
+    const updatedKoneks = getAllKoneks();
+    setKoneks(updatedKoneks);
 
-    // If we deleted the active bento, switch to another one
-    if (bentoId === activeBentoId && updatedBentos.length > 0) {
-      onBentoChange(updatedBentos[0]);
-    } else if (updatedBentos.length === 0) {
-      // If no bentos left, create a new one
-      const newBento = createBento('My Bento');
-      onBentoChange(newBento);
+    // If we deleted the active konek, switch to another one
+    if (konekId === activeKonekId && updatedKoneks.length > 0) {
+      onKonekChange(updatedKoneks[0]);
+    } else if (updatedKoneks.length === 0) {
+      // If no koneks left, create a new one
+      const newKonek = createKonek('My Konek');
+      onKonekChange(newKonek);
       setIsOpen(false);
     }
   };
@@ -106,14 +106,14 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
       {/* Trigger Button */}
       <button
         type="button"
-        aria-label="Open bento projects menu"
+        aria-label="Open konek projects menu"
         aria-expanded={isOpen}
         aria-haspopup="menu"
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <FolderOpen size={16} className="text-gray-500" />
-        <span className="max-w-[120px] truncate">{activeBentoName}</span>
+        <span className="max-w-[120px] truncate">{activeKonekName}</span>
         <ChevronDown
           size={16}
           className={`text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
@@ -125,7 +125,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
         {isOpen && (
           <motion.div
             role="menu"
-            aria-label="Bento projects menu"
+            aria-label="Konek projects menu"
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -135,64 +135,64 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
             {/* Header */}
             <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
               <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                My Bentos
+                My Koneks
               </h3>
             </div>
 
-            {/* Bentos List */}
+            {/* Koneks List */}
             <div className="max-h-[240px] overflow-y-auto">
-              {bentos.length === 0 ? (
-                <div className="px-4 py-6 text-center text-gray-400 text-sm">No bentos yet</div>
+              {koneks.length === 0 ? (
+                <div className="px-4 py-6 text-center text-gray-400 text-sm">No koneks yet</div>
               ) : (
-                bentos.map((bento) => (
+                koneks.map((konek) => (
                   <div
-                    key={bento.id}
+                    key={konek.id}
                     className={`group w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors ${
-                      bento.id === activeBentoId ? 'bg-blue-50' : ''
+                      konek.id === activeKonekId ? 'bg-blue-50' : ''
                     }`}
                   >
                     <button
                       type="button"
                       role="menuitem"
-                      aria-label={`Switch to ${bento.name} project`}
-                      aria-current={bento.id === activeBentoId ? 'true' : undefined}
+                      aria-label={`Switch to ${konek.name} project`}
+                      aria-current={konek.id === activeKonekId ? 'true' : undefined}
                       onClick={() => {
-                        onBentoChange(bento);
+                        onKonekChange(konek);
                         setIsOpen(false);
                       }}
                       className="flex-1 flex items-center gap-3 text-left min-w-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded-lg"
                     >
                       <div
                         className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shrink-0 ${
-                          bento.id === activeBentoId
+                          konek.id === activeKonekId
                             ? 'bg-blue-500 text-white'
                             : 'bg-gray-100 text-gray-600'
                         }`}
                       >
-                        {bento.name.charAt(0).toUpperCase()}
+                        {konek.name.charAt(0).toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p
                           className={`text-sm font-medium truncate ${
-                            bento.id === activeBentoId ? 'text-blue-600' : 'text-gray-900'
+                            konek.id === activeKonekId ? 'text-blue-600' : 'text-gray-900'
                           }`}
                         >
-                          {bento.name}
+                          {konek.name}
                         </p>
                         <p className="text-xs text-gray-400">
-                          Updated {formatDate(bento.updatedAt)}
+                          Updated {formatDate(konek.updatedAt)}
                         </p>
                       </div>
-                      {bento.id === activeBentoId && (
+                      {konek.id === activeKonekId && (
                         <Check size={16} className="text-blue-500 shrink-0" />
                       )}
                     </button>
                     <button
                       type="button"
-                      aria-label={`Delete ${bento.name} project`}
-                      onClick={(e) => handleDeleteBento(e, bento.id)}
+                      aria-label={`Delete ${konek.name} project`}
+                      onClick={(e) => handleDeleteKonek(e, konek.id)}
                       className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all shrink-0 focus:outline-none focus:ring-2 focus:ring-red-500"
-                      title="Delete bento"
+                      title="Delete konek"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -208,18 +208,18 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
                   <input
                     ref={inputRef}
                     type="text"
-                    aria-label="New bento project name"
+                    aria-label="New konek project name"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Bento name..."
+                    placeholder="Konek name..."
                     className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <div className="flex gap-2 mt-2">
                     <button
                       type="button"
-                      aria-label="Create new bento project"
-                      onClick={handleCreateBento}
+                      aria-label="Create new konek project"
+                      onClick={handleCreateKonek}
                       disabled={!newName.trim()}
                       className="flex-1 px-3 py-1.5 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
@@ -227,7 +227,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
                     </button>
                     <button
                       type="button"
-                      aria-label="Cancel creating new bento"
+                      aria-label="Cancel creating new konek"
                       onClick={() => {
                         setIsCreating(false);
                         setNewName('');
@@ -242,14 +242,14 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
                 <button
                   type="button"
                   role="menuitem"
-                  aria-label="Create new bento project"
+                  aria-label="Create new konek project"
                   onClick={() => setIsCreating(true)}
                   className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded-lg"
                 >
                   <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center">
                     <Plus size={16} className="text-white" />
                   </div>
-                  <span className="text-sm font-medium text-gray-700">New Bento</span>
+                  <span className="text-sm font-medium text-gray-700">New Konek</span>
                 </button>
               )}
             </div>

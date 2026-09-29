@@ -1,10 +1,10 @@
 # Quick Start
 
-Create your first bento page in 5 minutes!
+Create your first konek page in 5 minutes!
 
 ## Step 1: Open the Builder
 
-Go to OpenBento and you'll see the visual editor with a 9×9 grid.
+Go to Konek and you'll see the visual editor with a 9×9 grid.
 
 ## Step 2: Set Up Your Profile
 
@@ -48,7 +48,7 @@ Build your layout by adding more blocks:
 
 ## Step 7: Preview
 
-Click the **Preview** button to see how your bento looks on different devices.
+Click the **Preview** button to see how your konek looks on different devices.
 
 ## Step 8: Export
 
@@ -58,7 +58,7 @@ When you're happy with your design:
 2. Choose your deployment target
 3. Download the complete project
 
-That's it! You now have a deployable bento page.
+That's it! You now have a deployable konek page.
 
 ## Tips
 
@@ -71,5 +71,5 @@ That's it! You now have a deployable bento page.
 
 - [Block Types](/doc/usage/blocks) - Learn about all 7 block types
 - [Analytics](/doc/usage/analytics) - Track your visitors
-- [Export](/doc/export/overview) - Deploy your bento
+- [Export](/doc/export/overview) - Deploy your konek
 

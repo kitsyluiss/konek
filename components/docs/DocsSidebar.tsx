@@ -138,7 +138,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
 
         {/* Footer */}
         <div className="mt-8 pt-6 border-t border-gray-100">
-          <p className="text-xs text-gray-400 px-3">Built with OpenBento</p>
+          <p className="text-xs text-gray-400 px-3">Built with Konek</p>
         </div>
       </div>
     </aside>

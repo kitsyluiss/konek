@@ -1,12 +1,12 @@
 # Analytics Setup
 
-Track visitors on your exported bento page using Supabase Edge Functions.
+Track visitors on your exported konek page using Supabase Edge Functions.
 
 ## Overview
 
-OpenBento analytics tracks:
+Konek analytics tracks:
 
-- **Page views** - Visits to your bento
+- **Page views** - Visits to your konek
 - **Clicks** - Interactions with blocks (links, social)
 - **Referrers** - Where visitors come from
 - **UTM parameters** - Campaign tracking
@@ -15,7 +15,7 @@ OpenBento analytics tracks:
 
 **No API keys are exposed in your exported code!**
 
-The analytics system uses Supabase Edge Functions that handle authentication server-side. Your exported bento only needs the Supabase project URL.
+The analytics system uses Supabase Edge Functions that handle authentication server-side. Your exported konek only needs the Supabase project URL.
 
 ## Setup Guide
 
@@ -41,7 +41,7 @@ From your Supabase dashboard, collect:
 
 ### 4. Deploy Analytics
 
-From the OpenBento repository root:
+From the Konek repository root:
 
 ```bash
 SUPABASE_PROJECT_REF=your-project-ref \
@@ -57,7 +57,7 @@ This command:
 
 ### 5. Enable in Builder
 
-In the OpenBento builder:
+In the Konek builder:
 
 1. Open the sidebar
 2. Go to **Analytics (Supabase)**
@@ -65,7 +65,7 @@ In the OpenBento builder:
 4. Paste your **Supabase Project URL**
    - Format: `https://xxxx.supabase.co`
 
-### 6. Export Your Bento
+### 6. Export Your Konek
 
 When you export, analytics tracking is automatically included.
 
@@ -86,12 +86,12 @@ When you export, analytics tracking is automatically included.
 The admin endpoint is:
 
 ```
-{SUPABASE_URL}/functions/v1/openbento-analytics-admin?siteId=YOUR_SITE_ID&days=30
+{SUPABASE_URL}/functions/v1/konek-analytics-admin?siteId=YOUR_SITE_ID&days=30
 ```
 
 Headers required:
 ```
-x-openbento-admin-token: YOUR_ADMIN_TOKEN
+x-konek-admin-token: YOUR_ADMIN_TOKEN
 ```
 
 ## Data Collected
@@ -101,7 +101,7 @@ Each event includes:
 | Field | Description |
 |-------|-------------|
 | `event_type` | `page_view` or `click` |
-| `site_id` | Your bento identifier |
+| `site_id` | Your konek identifier |
 | `block_id` | Clicked block ID |
 | `destination_url` | Link destination |
 | `page_url` | Current page |
@@ -113,7 +113,7 @@ Each event includes:
 
 ## Privacy
 
-OpenBento analytics is privacy-friendly:
+Konek analytics is privacy-friendly:
 
 - ✅ No third-party cookies
 - ✅ No external tracking services
@@ -132,13 +132,13 @@ OpenBento analytics is privacy-friendly:
    ```
 3. Check function logs:
    ```bash
-   supabase functions logs openbento-analytics-track
+   supabase functions logs konek-analytics-track
    ```
 
 ### Admin endpoint returns 401
 
 1. Verify admin token matches the secret
-2. Check the header name: `x-openbento-admin-token`
+2. Check the header name: `x-konek-admin-token`
 
 ### Database errors
 

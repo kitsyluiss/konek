@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { UserProfile, BlockData, BlockType, SavedBento, AvatarStyle } from '../types';
+import { UserProfile, BlockData, BlockType, SavedKonek, AvatarStyle } from '../types';
 import Block from './Block';
 import EditorSidebar from './EditorSidebar';
 import ProfileDropdown from './ProfileDropdown';
@@ -12,11 +12,11 @@ import AIGeneratorModal from './AIGeneratorModal';
 import { exportSite, type ExportDeploymentTarget } from '../services/export';
 import {
   initializeApp,
-  updateBentoData,
-  setActiveBentoId,
-  downloadBentoJSON,
-  loadBentoFromFile,
-  renameBento,
+  updateKonekData,
+  setActiveKonekId,
+  downloadKonekJSON,
+  loadKonekFromFile,
+  renameKonek,
   GRID_VERSION,
 } from '../services/storageService';
 import { getSocialPlatformOption, buildSocialUrl, formatFollowerCount } from '../socialPlatforms';
@@ -365,7 +365,7 @@ const resolveOverlaps = (blocks: BlockData[]): BlockData[] => {
 
 const Builder: React.FC<BuilderProps> = ({ onBack }) => {
   // Load initial data from localStorage
-  const [activeBento, setActiveBento] = useState<SavedBento | null>(null);
+  const [activeKonek, setActiveKonek] = useState<SavedKonek | null>(null);
   const [gridVersion, setGridVersion] = useState<number>(GRID_VERSION);
   const [editingBlockId, setEditingBlockId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -394,7 +394,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
 
   const [deployTarget, setDeployTarget] = useState<ExportDeploymentTarget>(() => {
     try {
-      const stored = localStorage.getItem('openbento_deploy_target');
+      const stored = localStorage.getItem('konek_deploy_target');
       if (
         stored === 'vercel' ||
         stored === 'netlify' ||
@@ -417,7 +417,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
   const [analyticsDays, setAnalyticsDays] = useState<number>(30);
   const [analyticsAdminToken, setAnalyticsAdminToken] = useState<string>(() => {
     try {
-      return sessionStorage.getItem('openbento_analytics_admin_token') || '';
+      return sessionStorage.getItem('konek_analytics_admin_token') || '';
     } catch {
       return '';
     }
@@ -468,52 +468,52 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const bioInputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Load bento on mount and migrate old grid format if needed
+  // Load konek on mount and migrate old grid format if needed
   useEffect(() => {
-    const loadBento = async () => {
+    const loadKonek = async () => {
       try {
-        const bento = await initializeApp();
-        const dataGridVersion = bento.data.gridVersion ?? GRID_VERSION;
+        const konek = await initializeApp();
+        const dataGridVersion = konek.data.gridVersion ?? GRID_VERSION;
         // Migrate blocks from old 3-col grid to new 9-col grid (legacy only)
         const migratedBlocks =
           dataGridVersion < GRID_VERSION
-            ? migrateBlocksToNewGrid(bento.data.blocks)
-            : bento.data.blocks;
+            ? migrateBlocksToNewGrid(konek.data.blocks)
+            : konek.data.blocks;
         const normalizedBlocks = ensureBlocksHavePositions(migratedBlocks);
         const nextGridVersion = GRID_VERSION;
-        setActiveBento({
-          ...bento,
-          data: { ...bento.data, blocks: normalizedBlocks, gridVersion: nextGridVersion },
+        setActiveKonek({
+          ...konek,
+          data: { ...konek.data, blocks: normalizedBlocks, gridVersion: nextGridVersion },
         });
-        reset({ profile: bento.data.profile, blocks: normalizedBlocks });
+        reset({ profile: konek.data.profile, blocks: normalizedBlocks });
         setGridVersion(nextGridVersion);
         // Save migrated/normalized blocks if they changed
-        if (normalizedBlocks !== bento.data.blocks || nextGridVersion !== bento.data.gridVersion) {
-          updateBentoData(bento.id, {
-            profile: bento.data.profile,
+        if (normalizedBlocks !== konek.data.blocks || nextGridVersion !== konek.data.gridVersion) {
+          updateKonekData(konek.id, {
+            profile: konek.data.profile,
             blocks: normalizedBlocks,
             gridVersion: nextGridVersion,
           });
         }
       } catch (e) {
-        console.error('Failed to load bento:', e);
+        console.error('Failed to load konek:', e);
       } finally {
         setIsLoading(false);
       }
     };
-    loadBento();
+    loadKonek();
   }, [reset]);
 
   // Auto-save function - immediate save with status indicator
   const autoSave = useCallback(
     (newProfile: UserProfile, newBlocks: BlockData[]) => {
-      if (!activeBento) return;
+      if (!activeKonek) return;
 
       setSaving();
 
       try {
         // Save immediately
-        updateBentoData(activeBento.id, {
+        updateKonekData(activeKonek.id, {
           profile: newProfile,
           blocks: newBlocks,
           gridVersion,
@@ -527,14 +527,14 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
         setError();
       }
     },
-    [activeBento, gridVersion, setSaving, setSaved, setError]
+    [activeKonek, gridVersion, setSaving, setSaved, setError]
   );
 
   // Manual save function for button and keyboard shortcut
   const handleManualSave = useCallback(() => {
-    if (!activeBento || !profile) return;
+    if (!activeKonek || !profile) return;
     autoSave(profile, blocks);
-  }, [activeBento, profile, blocks, autoSave]);
+  }, [activeKonek, profile, blocks, autoSave]);
 
   // Keyboard shortcut: Ctrl/Cmd + S to save
   useEffect(() => {
@@ -575,39 +575,39 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
   // Note: Block positioning is handled when blocks are created (addBlock function)
   // No automatic repositioning to avoid conflicts with user-placed blocks
 
-  // Handle bento change from dropdown
-  const handleBentoChange = useCallback(
-    (bento: SavedBento) => {
+  // Handle konek change from dropdown
+  const handleKonekChange = useCallback(
+    (konek: SavedKonek) => {
       // Save current before switching
-      if (activeBento && profile) {
-        updateBentoData(activeBento.id, { profile, blocks, gridVersion });
+      if (activeKonek && profile) {
+        updateKonekData(activeKonek.id, { profile, blocks, gridVersion });
       }
 
-      const dataGridVersion = bento.data.gridVersion ?? GRID_VERSION;
+      const dataGridVersion = konek.data.gridVersion ?? GRID_VERSION;
       const migratedBlocks =
         dataGridVersion < GRID_VERSION
-          ? migrateBlocksToNewGrid(bento.data.blocks)
-          : bento.data.blocks;
+          ? migrateBlocksToNewGrid(konek.data.blocks)
+          : konek.data.blocks;
       const normalizedBlocks = ensureBlocksHavePositions(migratedBlocks);
       const nextGridVersion = GRID_VERSION;
       setGridVersion(nextGridVersion);
-      setActiveBentoId(bento.id);
-      setActiveBento({
-        ...bento,
-        data: { ...bento.data, blocks: normalizedBlocks, gridVersion: nextGridVersion },
+      setActiveKonekId(konek.id);
+      setActiveKonek({
+        ...konek,
+        data: { ...konek.data, blocks: normalizedBlocks, gridVersion: nextGridVersion },
       });
-      reset({ profile: bento.data.profile, blocks: normalizedBlocks });
+      reset({ profile: konek.data.profile, blocks: normalizedBlocks });
       setEditingBlockId(null);
 
-      if (normalizedBlocks !== bento.data.blocks || nextGridVersion !== bento.data.gridVersion) {
-        updateBentoData(bento.id, {
-          profile: bento.data.profile,
+      if (normalizedBlocks !== konek.data.blocks || nextGridVersion !== konek.data.gridVersion) {
+        updateKonekData(konek.id, {
+          profile: konek.data.profile,
           blocks: normalizedBlocks,
           gridVersion: nextGridVersion,
         });
       }
     },
-    [activeBento, profile, blocks, gridVersion, reset]
+    [activeKonek, profile, blocks, gridVersion, reset]
   );
 
   const addBlock = (type: BlockType) => {
@@ -776,46 +776,46 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
     setShowDeployModal(true);
   };
 
-  // Export current bento as JSON file
+  // Export current konek as JSON file
   const handleExportJSON = () => {
-    if (!activeBento) return;
-    // Update bento with current state before exporting
-    const currentBento = {
-      ...activeBento,
+    if (!activeKonek) return;
+    // Update konek with current state before exporting
+    const currentKonek = {
+      ...activeKonek,
       data: { profile, blocks, gridVersion },
     };
-    downloadBentoJSON(currentBento);
+    downloadKonekJSON(currentKonek);
   };
 
-  // Import bento from JSON file
+  // Import konek from JSON file
   const handleImportJSON = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     try {
-      const bento = await loadBentoFromFile(file);
-      const dataGridVersion = bento.data.gridVersion ?? GRID_VERSION;
+      const konek = await loadKonekFromFile(file);
+      const dataGridVersion = konek.data.gridVersion ?? GRID_VERSION;
       const migratedBlocks =
         dataGridVersion < GRID_VERSION
-          ? migrateBlocksToNewGrid(bento.data.blocks)
-          : bento.data.blocks;
+          ? migrateBlocksToNewGrid(konek.data.blocks)
+          : konek.data.blocks;
       const normalizedBlocks = ensureBlocksHavePositions(migratedBlocks);
       const nextGridVersion = GRID_VERSION;
       setGridVersion(nextGridVersion);
-      setActiveBento({
-        ...bento,
-        data: { ...bento.data, blocks: normalizedBlocks, gridVersion: nextGridVersion },
+      setActiveKonek({
+        ...konek,
+        data: { ...konek.data, blocks: normalizedBlocks, gridVersion: nextGridVersion },
       });
-      reset({ profile: bento.data.profile, blocks: normalizedBlocks });
+      reset({ profile: konek.data.profile, blocks: normalizedBlocks });
       setEditingBlockId(null);
-      updateBentoData(bento.id, {
-        profile: bento.data.profile,
+      updateKonekData(konek.id, {
+        profile: konek.data.profile,
         blocks: normalizedBlocks,
         gridVersion: nextGridVersion,
       });
     } catch (err) {
-      console.error('Failed to import bento:', err);
-      alert('Failed to import bento. Please check the JSON file.');
+      console.error('Failed to import konek:', err);
+      alert('Failed to import konek. Please check the JSON file.');
     }
 
     // Reset file input
@@ -942,7 +942,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
 
   useEffect(() => {
     try {
-      localStorage.setItem('openbento_deploy_target', deployTarget);
+      localStorage.setItem('konek_deploy_target', deployTarget);
     } catch {
       // ignore
     }
@@ -956,7 +956,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
     try {
       await exportSite(
         { profile, blocks },
-        { siteId: activeBento?.id, deploymentTarget: deployTarget }
+        { siteId: activeKonek?.id, deploymentTarget: deployTarget }
       );
       setHasDownloadedExport(true);
     } catch (e) {
@@ -966,7 +966,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
     } finally {
       setIsExporting(false);
     }
-  }, [profile, blocks, activeBento?.id, deployTarget]);
+  }, [profile, blocks, activeKonek?.id, deployTarget]);
 
   const fetchAnalytics = useCallback(async () => {
     if (!profile) return;
@@ -977,8 +977,8 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
       return;
     }
 
-    if (!activeBento?.id) {
-      setAnalyticsError('Missing siteId (active bento).');
+    if (!activeKonek?.id) {
+      setAnalyticsError('Missing siteId (active konek).');
       return;
     }
 
@@ -991,10 +991,10 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
     setAnalyticsError(null);
 
     try {
-      const endpoint = `${supabaseUrl}/functions/v1/openbento-analytics-admin?siteId=${encodeURIComponent(activeBento.id)}&days=${encodeURIComponent(String(analyticsDays))}`;
+      const endpoint = `${supabaseUrl}/functions/v1/konek-analytics-admin?siteId=${encodeURIComponent(activeKonek.id)}&days=${encodeURIComponent(String(analyticsDays))}`;
       const res = await fetch(endpoint, {
         headers: {
-          'x-openbento-admin-token': analyticsAdminToken.trim(),
+          'x-konek-admin-token': analyticsAdminToken.trim(),
         },
       });
       const json = await res.json().catch(() => ({}));
@@ -1010,7 +1010,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
     } finally {
       setIsLoadingAnalytics(false);
     }
-  }, [profile, activeBento?.id, analyticsAdminToken, analyticsDays]);
+  }, [profile, activeKonek?.id, analyticsAdminToken, analyticsDays]);
 
   const inferProjectRefFromSupabaseUrl = useCallback((value: string) => {
     try {
@@ -1077,7 +1077,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
         adminToken: analyticsAdminToken.trim() || undefined,
       };
 
-      const res = await fetch('/__openbento/supabase/setup', {
+      const res = await fetch('/__konek/supabase/setup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -1136,7 +1136,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
         supabaseSetupProjectRef.trim() || (url ? inferProjectRefFromSupabaseUrl(url) : '');
       if (!projectRef) throw new Error('Missing project ref (set it first).');
 
-      const endpoint = new URL('/__openbento/supabase/status', window.location.origin);
+      const endpoint = new URL('/__konek/supabase/status', window.location.origin);
       endpoint.searchParams.set('projectRef', projectRef);
       if (analyticsAdminToken.trim())
         endpoint.searchParams.set('adminToken', analyticsAdminToken.trim());
@@ -1158,7 +1158,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
 
   useEffect(() => {
     try {
-      sessionStorage.setItem('openbento_analytics_admin_token', analyticsAdminToken);
+      sessionStorage.setItem('konek_analytics_admin_token', analyticsAdminToken);
     } catch {
       // ignore
     }
@@ -1421,14 +1421,14 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                   <Home size={16} />
                 </button>
               )}
-              <span className="font-bold text-gray-800 tracking-tight px-1">OpenBento</span>
+              <span className="font-bold text-gray-800 tracking-tight px-1">Konek</span>
               <div className="h-6 w-px bg-gray-200 mx-1"></div>
               {/* Profile Dropdown */}
-              {activeBento && (
+              {activeKonek && (
                 <ProfileDropdown
-                  activeBentoId={activeBento.id}
-                  activeBentoName={activeBento.name}
-                  onBentoChange={handleBentoChange}
+                  activeKonekId={activeKonek.id}
+                  activeKonekName={activeKonek.name}
+                  onKonekChange={handleKonekChange}
                 />
               )}
               <div className="h-6 w-px bg-gray-200 mx-1"></div>
@@ -1934,7 +1934,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                           <div className="w-full py-6 text-center text-sm text-gray-500 font-medium">
                             <p className="inline-flex items-center gap-1">
                               Made with <span className="text-red-400">♥</span> using{' '}
-                              <span className="font-semibold">OpenBento</span>
+                              <span className="font-semibold">Konek</span>
                             </p>
                           </div>
                         )}
@@ -2076,7 +2076,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                       <motion.main
                         ref={gridRef as any}
                         role="main"
-                        aria-label="Bento grid editor"
+                        aria-label="Konek grid editor"
                         layout
                         className="grid gap-2"
                         style={{
@@ -2194,12 +2194,12 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
             <p className="text-sm text-gray-400 font-medium">
               Made with <span className="text-red-400">♥</span> using{' '}
               <a
-                href="https://github.com/yoanbernabeu/openbento"
+                href="https://github.com/yoanbernabeu/konek"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 font-semibold hover:text-violet-500 transition-colors"
               >
-                OpenBento
+                Konek
               </a>
             </p>
           </footer>
@@ -2223,11 +2223,11 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
         onClose={() => setShowSettingsModal(false)}
         profile={profile}
         setProfile={handleSetProfile}
-        bentoName={activeBento?.name}
-        onBentoNameChange={(name) => {
-          if (activeBento) {
-            setActiveBento({ ...activeBento, name });
-            renameBento(activeBento.id, name);
+        konekName={activeKonek?.name}
+        onKonekNameChange={(name) => {
+          if (activeKonek) {
+            setActiveKonek({ ...activeKonek, name });
+            renameKonek(activeKonek.id, name);
           }
         }}
         blocks={blocks}
@@ -2271,12 +2271,12 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
       <AIGeneratorModal
         isOpen={showAIGeneratorModal}
         onClose={() => setShowAIGeneratorModal(false)}
-        onBentoImported={(newBento) => {
-          // Reload the app with the new bento
-          setActiveBento(newBento);
-          handleSetProfile(newBento.data.profile);
-          handleSetBlocks(newBento.data.blocks);
-          setGridVersion(newBento.data.gridVersion ?? GRID_VERSION);
+        onKonekImported={(newKonek) => {
+          // Reload the app with the new konek
+          setActiveKonek(newKonek);
+          handleSetProfile(newKonek.data.profile);
+          handleSetBlocks(newKonek.data.blocks);
+          setGridVersion(newKonek.data.gridVersion ?? GRID_VERSION);
         }}
       />
 
@@ -2356,7 +2356,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                             : 'Download package'}
                       </p>
                       <p className="text-gray-500 text-xs break-all">
-                        <code>{`${profile.name.replace(/\s+/g, '-').toLowerCase()}-bento-${deployTarget}.zip`}</code>
+                        <code>{`${profile.name.replace(/\s+/g, '-').toLowerCase()}-konek-${deployTarget}.zip`}</code>
                       </p>
                     </div>
                   </div>
@@ -2418,7 +2418,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                   </div>
                   <h2 className="text-xl font-bold text-gray-900">Analytics</h2>
                   <p className="text-gray-500 mt-1 text-sm">
-                    Site ID: <span className="font-mono text-xs">{activeBento?.id || '—'}</span>
+                    Site ID: <span className="font-mono text-xs">{activeKonek?.id || '—'}</span>
                   </p>
                 </div>
                 <button
@@ -2571,7 +2571,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                               value={supabaseSetupProjectName}
                               onChange={(e) => setSupabaseSetupProjectName(e.target.value)}
                               className="w-full bg-white border border-gray-200 rounded-xl p-2.5 text-sm font-medium text-gray-700 focus:ring-2 focus:ring-black/5 focus:border-black focus:outline-none transition-all"
-                              placeholder={`openbento-analytics-${new Date().getFullYear()}`}
+                              placeholder={`konek-analytics-${new Date().getFullYear()}`}
                             />
                           </div>
                           <div>
@@ -2709,8 +2709,8 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                       )}
                     </div>
                     <p className="text-[11px] text-gray-400">
-                      This dashboard reads from the <code>openbento-analytics-admin</code> Edge
-                      Function using your admin token.
+                      This dashboard reads from the <code>konek-analytics-admin</code> Edge Function
+                      using your admin token.
                     </p>
                   </div>
 

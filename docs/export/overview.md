@@ -1,15 +1,15 @@
 # Export Overview
 
-When you export your bento, OpenBento generates a complete, production-ready React project.
+When you export your konek, Konek generates a complete, production-ready React project.
 
 ## What's Included
 
 Your exported project contains:
 
 ```
-my-bento/
+my-konek/
 ├── src/
-│   ├── App.tsx           # Main component with your bento
+│   ├── App.tsx           # Main component with your konek
 │   ├── main.tsx          # Entry point
 │   ├── index.css         # Tailwind styles
 │   └── assets/           # Your images
@@ -57,7 +57,7 @@ The export includes ready-to-use configurations for:
 After extracting the export:
 
 ```bash
-cd my-bento
+cd my-konek
 npm install
 npm run dev
 ```

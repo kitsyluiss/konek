@@ -1,6 +1,6 @@
 # Block Types
 
-OpenBento includes 7 block types to create your perfect bento layout.
+Konek includes 7 block types to create your perfect konek layout.
 
 ## Social Block
 
@@ -50,7 +50,7 @@ Create clickable links with custom styling.
 
 ## Text Block
 
-Add text content to your bento.
+Add text content to your konek.
 
 **Features:**
 - Rich text display

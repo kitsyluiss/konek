@@ -1,6 +1,6 @@
 # Quick Start: Builder Setup
 
-Get the OpenBento builder running in under 2 minutes.
+Get the Konek builder running in under 2 minutes.
 
 ## Prerequisites
 
@@ -10,8 +10,8 @@ Get the OpenBento builder running in under 2 minutes.
 
 ```bash
 # Clone
-git clone https://github.com/yoanbernabeu/openbento.git
-cd openbento
+git clone https://github.com/yoanbernabeu/konek.git
+cd konek
 
 # Install
 npm install

@@ -1,6 +1,6 @@
 # Installation
 
-This guide covers how to install and run the OpenBento builder locally.
+This guide covers how to install and run the Konek builder locally.
 
 ## Prerequisites
 
@@ -12,8 +12,8 @@ This guide covers how to install and run the OpenBento builder locally.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yoanbernabeu/openbento.git
-cd openbento
+git clone https://github.com/yoanbernabeu/konek.git
+cd konek
 ```
 
 2. Install dependencies:

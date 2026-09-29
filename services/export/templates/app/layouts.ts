@@ -126,7 +126,7 @@ export const generateFooter = (showBranding: boolean): string =>
         <footer className="w-full py-10 text-center">
           <p className="text-sm text-gray-400 font-medium">
             Made with <span className="text-red-400">♥</span> using{' '}
-            <a href="https://github.com/yoanbernabeu/openbento" target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-violet-500 transition-colors">OpenBento</a>
+            <a href="https://github.com/yoanbernabeu/konek" target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-violet-500 transition-colors">Konek</a>
           </p>
         </footer>`
     : '';

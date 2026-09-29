@@ -1,15 +1,15 @@
 # Deploy the Builder
 
-Want to host your own OpenBento instance? Here's how to deploy the builder itself.
+Want to host your own Konek instance? Here's how to deploy the builder itself.
 
 ## Docker (Recommended)
 
-OpenBento provides a multi-platform Docker image supporting AMD64 and ARM64 architectures.
+Konek provides a multi-platform Docker image supporting AMD64 and ARM64 architectures.
 
 ### Quick Start
 
 ```bash
-docker run -d -p 8080:80 yoanbernabeu/openbento:latest
+docker run -d -p 8080:80 yoanbernabeu/konek:latest
 ```
 
 Open [http://localhost:8080](http://localhost:8080)
@@ -20,8 +20,8 @@ Create a `compose.yml`:
 
 ```yaml
 services:
-  openbento:
-    image: yoanbernabeu/openbento:latest
+  konek:
+    image: yoanbernabeu/konek:latest
     ports:
       - "8080:80"
     restart: unless-stopped
@@ -37,10 +37,10 @@ docker compose up -d
 
 ```bash
 # For your current platform
-docker build -t my-openbento .
+docker build -t my-konek .
 
 # For multiple platforms
-docker buildx build --platform linux/amd64,linux/arm64 -t my-openbento .
+docker buildx build --platform linux/amd64,linux/arm64 -t my-konek .
 ```
 
 ### Platform Support
@@ -56,7 +56,7 @@ Since the builder is a static site, you can host it anywhere:
 
 ### Vercel
 
-1. Fork the [OpenBento repository](https://github.com/yoanbernabeu/openbento)
+1. Fork the [Konek repository](https://github.com/yoanbernabeu/konek)
 2. Import in [Vercel Dashboard](https://vercel.com/new)
 3. Vercel auto-detects Vite configuration
 4. Optionally set `VITE_ENABLE_LANDING=true` in environment variables
@@ -91,8 +91,8 @@ npm run build
 ```nginx
 server {
     listen 80;
-    server_name openbento.yourdomain.com;
-    root /var/www/openbento/dist;
+    server_name konek.yourdomain.com;
+    root /var/www/konek/dist;
     index index.html;
 
     location / {
@@ -113,7 +113,7 @@ The repository includes a `Caddyfile`:
 
 ```
 yourdomain.com {
-    root * /srv/openbento/dist
+    root * /srv/konek/dist
     file_server
     try_files {path} /index.html
 }

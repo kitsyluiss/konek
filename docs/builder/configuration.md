@@ -1,6 +1,6 @@
 # Configuration
 
-OpenBento can be customized through environment variables.
+Konek can be customized through environment variables.
 
 ## Environment Variables
 
@@ -34,10 +34,10 @@ All user data is stored in the browser's localStorage:
 - **No account needed** - Just start creating
 - **Privacy first** - Your data stays on your device
 
-Data is saved automatically as you work. To manage saved bentos:
+Data is saved automatically as you work. To manage saved koneks:
 
 - Access the **Projects** panel in the sidebar
-- Export/import bentos as JSON files for backup
+- Export/import koneks as JSON files for backup
 
 ## Tech Stack
 

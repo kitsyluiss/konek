@@ -67,7 +67,7 @@ const DocsPage: React.FC = () => {
               <div className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-sm">
                 B
               </div>
-              <span className="font-semibold text-gray-900">OpenBento</span>
+              <span className="font-semibold text-gray-900">Konek</span>
             </a>
             <span className="text-gray-300">/</span>
             <span className="text-gray-600">Docs</span>
@@ -98,7 +98,7 @@ const DocsPage: React.FC = () => {
           <div className="flex-1 flex items-center justify-end gap-2 sm:gap-3 px-4 lg:px-8 py-3">
             <DocsSearch docs={docsManifest} onNavigate={navigateToDoc} />
             <a
-              href="https://github.com/yoanbernabeu/openbento"
+              href="https://github.com/yoanbernabeu/konek"
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all"

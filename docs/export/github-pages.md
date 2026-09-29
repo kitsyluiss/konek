@@ -1,6 +1,6 @@
 # Deploy to GitHub Pages
 
-Host your bento for free using GitHub Pages.
+Host your konek for free using GitHub Pages.
 
 ## Automatic Deployment (Recommended)
 
@@ -12,11 +12,11 @@ The export includes a GitHub Actions workflow that deploys automatically.
 2. Push your exported project:
 
 ```bash
-cd my-bento
+cd my-konek
 git init
 git add .
 git commit -m "Initial commit"
-git remote add origin https://github.com/username/my-bento.git
+git remote add origin https://github.com/username/my-konek.git
 git push -u origin main
 ```
 
@@ -37,9 +37,9 @@ git push
 
 ### Step 4: Access Your Site
 
-Your bento is live at:
+Your konek is live at:
 ```
-https://username.github.io/my-bento/
+https://username.github.io/my-konek/
 ```
 
 ## Manual Deployment
@@ -70,7 +70,7 @@ In `vite.config.ts`:
 
 ```typescript
 export default defineConfig({
-  base: '/my-bento/',
+  base: '/my-konek/',
   // ... other config
 })
 ```
@@ -88,14 +88,14 @@ npm run deploy
 Create `public/CNAME` with your domain:
 
 ```
-mybento.com
+mykonek.com
 ```
 
 ### Step 2: Configure DNS
 
 Add these records at your domain registrar:
 
-**For apex domain (mybento.com):**
+**For apex domain (mykonek.com):**
 ```
 A     @     185.199.108.153
 A     @     185.199.109.153
@@ -103,7 +103,7 @@ A     @     185.199.110.153
 A     @     185.199.111.153
 ```
 
-**For subdomain (www.mybento.com):**
+**For subdomain (www.mykonek.com):**
 ```
 CNAME   www   username.github.io
 ```
@@ -176,7 +176,7 @@ GitHub Pages is great for static sites but has limits:
 - 100GB bandwidth per month
 - No server-side code
 
-For most bentos, these limits are never reached.
+For most koneks, these limits are never reached.
 
 ## Pricing
 

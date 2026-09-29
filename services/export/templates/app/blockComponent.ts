@@ -74,7 +74,7 @@ const Block = ({ block }: { block: BlockData }) => {
     const url = block.socialHandle ? platform?.buildUrl(block.socialHandle) : ''
     return (
       <a href={url || undefined} target="_blank" rel="noopener noreferrer" onClick={handleClick}
-        className={\`bento-item relative h-full \${block.color || 'bg-white'} flex items-center justify-center shadow-sm border border-gray-100 hover:shadow-md transition-all\`}
+        className={\`konek-item relative h-full \${block.color || 'bg-white'} flex items-center justify-center shadow-sm border border-gray-100 hover:shadow-md transition-all\`}
         style={{ borderRadius, ...gridStyle, ...(block.customBackground ? { background: block.customBackground } : {}) }}>
         {Icon && <span style={{ color: platform.brandColor }}><Icon size={24} /></span>}
       </a>
@@ -84,7 +84,7 @@ const Block = ({ block }: { block: BlockData }) => {
   if (isYTGrid) {
     return (
       <div onClick={handleClick} style={{ borderRadius, ...gridStyle, ...(block.customBackground ? { background: block.customBackground } : {}) }}
-        className={\`bento-item group cursor-pointer h-full \${block.color || 'bg-white'} ring-1 ring-black/5 shadow-sm hover:shadow-xl transition-all\`}>
+        className={\`konek-item group cursor-pointer h-full \${block.color || 'bg-white'} ring-1 ring-black/5 shadow-sm hover:shadow-xl transition-all\`}>
         <div className="w-full h-full flex flex-col p-2 md:p-3">
           <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100">
             <div className="w-6 h-6 rounded-lg bg-red-600 text-white flex items-center justify-center"><Youtube size={12} /></div>
@@ -120,7 +120,7 @@ const Block = ({ block }: { block: BlockData }) => {
     <div onClick={handleClick} style={{ ...gridStyle }} className="cursor-pointer h-full transform-gpu">
       <div ref={elementRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
         style={{ ...bgStyle, borderRadius, ...tiltStyle, width: '100%', height: '100%', transformStyle: 'preserve-3d' }}
-        className={\`bento-item group relative overflow-hidden w-full h-full \${!block.customBackground && !isLinkImg && !isRichYT ? (block.color || 'bg-white') : ''} \${block.textColor || 'text-gray-900'} ring-1 ring-black/5 shadow-sm transition-all\`}>
+        className={\`konek-item group relative overflow-hidden w-full h-full \${!block.customBackground && !isLinkImg && !isRichYT ? (block.color || 'bg-white') : ''} \${block.textColor || 'text-gray-900'} ring-1 ring-black/5 shadow-sm transition-all\`}>
         <div className="absolute inset-0 pointer-events-none z-30 opacity-0 group-hover:opacity-100 transition-opacity"
           style={{ background: 'radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255,255,255,0.25) 0%, transparent 60%)' }} />
         {(isRichYT || isLinkImg) && (block.title || block.subtext) && (

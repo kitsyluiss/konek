@@ -5,5 +5,5 @@
 import { NGINX_CONF } from './docker';
 
 export const getVpsNginxConf = (): string => {
-  return NGINX_CONF.replace('/usr/share/nginx/html', '/var/www/bento/dist');
+  return NGINX_CONF.replace('/usr/share/nginx/html', '/var/www/konek/dist');
 };

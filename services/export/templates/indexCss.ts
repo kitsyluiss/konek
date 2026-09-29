@@ -36,7 +36,7 @@ export const generateIndexCSS = (): string => `@tailwind base;
   margin-top: 0.25rem;
 }
 
-.bento-item {
+.konek-item {
   transform-style: preserve-3d;
   will-change: transform;
 }

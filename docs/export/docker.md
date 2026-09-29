@@ -1,15 +1,15 @@
 # Deploy with Docker
 
-Self-host your bento using Docker for full control.
+Self-host your konek using Docker for full control.
 
 ## Quick Start
 
 The export includes a Dockerfile. Build and run:
 
 ```bash
-cd my-bento
-docker build -t my-bento .
-docker run -d -p 8080:80 my-bento
+cd my-konek
+docker build -t my-konek .
+docker run -d -p 8080:80 my-konek
 ```
 
 Open [http://localhost:8080](http://localhost:8080)
@@ -20,7 +20,7 @@ Create a `compose.yml`:
 
 ```yaml
 services:
-  bento:
+  konek:
     build: .
     ports:
       - "8080:80"
@@ -87,19 +87,19 @@ server {
 ### Step 1: Build Image
 
 ```bash
-docker build -t my-bento .
+docker build -t my-konek .
 ```
 
 ### Step 2: Save Image
 
 ```bash
-docker save my-bento > my-bento.tar
+docker save my-konek > my-konek.tar
 ```
 
 ### Step 3: Transfer to Server
 
 ```bash
-scp my-bento.tar user@server:/path/to/
+scp my-konek.tar user@server:/path/to/
 ```
 
 ### Step 4: Load and Run
@@ -107,8 +107,8 @@ scp my-bento.tar user@server:/path/to/
 On your server:
 
 ```bash
-docker load < my-bento.tar
-docker run -d -p 80:80 --name my-bento my-bento
+docker load < my-konek.tar
+docker run -d -p 80:80 --name my-konek my-konek
 ```
 
 ## Using a Registry
@@ -116,15 +116,15 @@ docker run -d -p 80:80 --name my-bento my-bento
 ### Push to Docker Hub
 
 ```bash
-docker tag my-bento username/my-bento:latest
-docker push username/my-bento:latest
+docker tag my-konek username/my-konek:latest
+docker push username/my-konek:latest
 ```
 
 ### Pull on Server
 
 ```bash
-docker pull username/my-bento:latest
-docker run -d -p 80:80 username/my-bento
+docker pull username/my-konek:latest
+docker run -d -p 80:80 username/my-konek
 ```
 
 ## With Traefik (Reverse Proxy)
@@ -133,12 +133,12 @@ For multiple sites with automatic HTTPS:
 
 ```yaml
 services:
-  bento:
+  konek:
     build: .
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bento.rule=Host(`mybento.com`)"
-      - "traefik.http.routers.bento.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.konek.rule=Host(`mykonek.com`)"
+      - "traefik.http.routers.konek.tls.certresolver=letsencrypt"
     networks:
       - traefik
 
@@ -152,8 +152,8 @@ networks:
 `Caddyfile`:
 
 ```
-mybento.com {
-    reverse_proxy bento:80
+mykonek.com {
+    reverse_proxy konek:80
 }
 ```
 
@@ -170,9 +170,9 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
     depends_on:
-      - bento
+      - konek
 
-  bento:
+  konek:
     build: .
 
 volumes:
@@ -185,7 +185,7 @@ Add a health check to your compose file:
 
 ```yaml
 services:
-  bento:
+  konek:
     build: .
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/"]
@@ -200,7 +200,7 @@ Limit container resources:
 
 ```yaml
 services:
-  bento:
+  konek:
     build: .
     deploy:
       resources:
@@ -215,14 +215,14 @@ services:
 
 Check logs:
 ```bash
-docker logs my-bento
+docker logs my-konek
 ```
 
 ### Port already in use
 
 Use a different port:
 ```bash
-docker run -d -p 3000:80 my-bento
+docker run -d -p 3000:80 my-konek
 ```
 
 ### Permission denied

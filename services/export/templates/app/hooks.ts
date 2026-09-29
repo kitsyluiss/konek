@@ -85,7 +85,7 @@ const useAnalytics = () => {
         screenH: window.screen?.height,
       }
       // Use Edge Function endpoint (secure - no API keys needed)
-      const endpoint = config.supabaseUrl.replace(/\\/+$/, '') + '/functions/v1/openbento-analytics-track'
+      const endpoint = config.supabaseUrl.replace(/\\/+$/, '') + '/functions/v1/konek-analytics-track'
       fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

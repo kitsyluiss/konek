@@ -11,10 +11,11 @@ import {
   X,
   Trash2,
   CopyPlus,
+  Contact,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getSocialPlatformOption, inferSocialPlatformFromUrl } from '../socialPlatforms';
-import { openSafeUrl, isValidYouTubeChannelId, isValidLocationString } from '../utils/security';
+import { openSafeUrl, isValidYouTubeChannelId, isValidLocationString, extractMapSrc } from '../utils/security';
 
 // Apple TV style 3D tilt effect hook
 const useTiltEffect = (isEnabled: boolean = true) => {
@@ -833,13 +834,36 @@ const Block: React.FC<BlockProps> = ({
         e.preventDefault();
         onDrop(block.id);
       }}
-      onClick={() => {
+      onClick={(e) => {
         if (previewMode) {
+          if (block.type === BlockType.CONTACT && block.contactInfo) {
+            e.preventDefault();
+            import('../utils/vcard').then(m => m.downloadVCard(block.contactInfo!));
+            return;
+          }
           // In preview mode, navigate to block URL with security validation
           let url = block.content;
           if (block.type === BlockType.SOCIAL && block.socialPlatform && block.socialHandle) {
             const option = getSocialPlatformOption(block.socialPlatform);
             url = option?.buildUrl(block.socialHandle);
+          } else if (block.type === BlockType.MAP) {
+            const mapSrc = extractMapSrc(block.content);
+            if (mapSrc) {
+              const placeMatch = mapSrc.match(/!2s([^!&?]+)/);
+              if (placeMatch) {
+                url = `https://www.google.com/maps/place/${placeMatch[1]}`;
+              } else {
+                const latMatch = mapSrc.match(/!3d([-\d.]+)/);
+                const lngMatch = mapSrc.match(/!2d([-\d.]+)/);
+                if (latMatch && lngMatch) {
+                  url = `https://www.google.com/maps/search/?api=1&query=${latMatch[1]},${lngMatch[1]}`;
+                } else {
+                  url = `https://www.google.com/maps`;
+                }
+              }
+            } else if (isValidLocationString(block.content)) {
+              url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(block.content || '')}`;
+            }
           }
           // SECURITY: Only open safe URLs (http/https)
           openSafeUrl(url);
@@ -1095,26 +1119,71 @@ const Block: React.FC<BlockProps> = ({
             /* MAP BLOCK - Clean minimal */
             <div className="w-full h-full relative bg-gray-100 overflow-hidden">
               {/* SECURITY: Only render iframe if location is valid (not a URL/script) */}
-              {isValidLocationString(block.content) ? (
-                <iframe
-                  width="100%"
-                  height="100%"
-                  className="opacity-95 grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent(block.content || 'Paris')}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-                  loading="lazy"
-                  sandbox="allow-scripts allow-same-origin"
-                ></iframe>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                  Invalid location
-                </div>
-              )}
+              {(() => {
+                const mapSrc = extractMapSrc(block.content);
+                if (mapSrc) {
+                  return (
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      className="opacity-95 grayscale-[20%] group-hover:grayscale-0 transition-all duration-500 pointer-events-none"
+                      src={mapSrc}
+                      loading="lazy"
+                      allowFullScreen
+                      referrerPolicy="no-referrer-when-downgrade"
+                      
+                    ></iframe>
+                  );
+                } else if (isValidLocationString(block.content)) {
+                  return (
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      className="opacity-95 grayscale-[20%] group-hover:grayscale-0 transition-all duration-500 pointer-events-none"
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(block.content || 'Paris')}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                      loading="lazy"
+                      allowFullScreen
+                      referrerPolicy="no-referrer-when-downgrade"
+                      
+                    ></iframe>
+                  );
+                }
+                return (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                    Invalid location
+                  </div>
+                );
+              })()}
               {block.title && (
                 <div className="absolute bottom-0 left-0 right-0 p-2 md:p-3 bg-gradient-to-t from-black/60 to-transparent">
                   <p className={`font-semibold text-white drop-shadow ${textSizes.overlayTitle}`}>
                     {block.title}
                   </p>
                 </div>
+              )}
+            </div>
+          ) : block.type === BlockType.CONTACT ? (
+            /* CONTACT BLOCK */
+            <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center">
+              <div className="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-black/5 rounded-full flex items-center justify-center mb-2 shadow-sm overflow-hidden shrink-0">
+                {block.imageUrl ? (
+                  <img src={block.imageUrl} alt="Contact icon" className="w-full h-full object-cover" />
+                ) : (
+                  <Contact size={24} className={block.textColor || 'text-black'} />
+                )}
+              </div>
+              <h3 className={`font-bold ${textSizes.title} line-clamp-1`}>
+                {block.title || 'Save to Contacts'}
+              </h3>
+              {(block.contactInfo?.firstName || block.contactInfo?.lastName) && (
+                <p className={`mt-0.5 font-medium opacity-80 ${textSizes.subtext} line-clamp-1`}>
+                  {block.contactInfo.firstName} {block.contactInfo.lastName}
+                </p>
+              )}
+              {block.subtext && !block.contactInfo?.firstName && (
+                <p className={`mt-0.5 font-medium opacity-80 ${textSizes.subtext} line-clamp-1`}>
+                  {block.subtext}
+                </p>
               )}
             </div>
           ) : isRichYoutube ? (

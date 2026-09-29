@@ -1,20 +1,61 @@
 import React, { useEffect, useState } from 'react';
 import type { AvatarStyle, SavedBento } from '../types';
-import { getBento, getOrCreateActiveBento, setActiveBentoId } from '../services/storageService';
+import { getBento, getOrCreateActiveBento, setActiveBentoId, getAllBentos, importBentoFromJSON } from '../services/storageService';
 import Block from './Block';
 import { buildSocialUrl, formatFollowerCount, getSocialPlatformOption } from '../socialPlatforms';
 import { getMobileLayout, MOBILE_GRID_CONFIG } from '../utils/mobileLayout';
 
 const PreviewPage: React.FC = () => {
   const [bento, setBento] = useState<SavedBento | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const requestedId = params.get('id')?.trim();
-    const requested = requestedId ? getBento(requestedId) : null;
-    const resolved = requested || getOrCreateActiveBento();
-    if (requested) setActiveBentoId(requested.id);
-    setBento(resolved);
+    const init = async () => {
+      const pathname = window.location.pathname;
+      const params = new URLSearchParams(window.location.search);
+      
+      let slug = '';
+      if (pathname.startsWith('/p/')) {
+        slug = pathname.split('/p/')[1]?.replace(/\/$/, '');
+      }
+
+      // If we have a slug, try to find it
+      if (slug) {
+        // 1. Check local storage bentos for matching slug
+        const localBentos = getAllBentos();
+        const matchedBento = localBentos.find(b => b.data.profile.slug === slug || b.id === slug);
+        
+        if (matchedBento) {
+          setBento(matchedBento);
+          return;
+        }
+
+        // 2. Try fetching from public /bentos/ folder
+        try {
+          const res = await fetch(`/bentos/${slug}.json`);
+          if (res.ok) {
+            const json = await res.json();
+            const imported = importBentoFromJSON(json);
+            setBento(imported);
+            return;
+          }
+        } catch (e) {
+          console.error("Failed to fetch remote bento:", e);
+        }
+
+        setError("Profile not found.");
+        return;
+      }
+
+      // Fallback for normal preview
+      const requestedId = params.get('id')?.trim();
+      const requested = requestedId ? getBento(requestedId) : null;
+      const resolved = requested || getOrCreateActiveBento();
+      if (requested) setActiveBentoId(requested.id);
+      setBento(resolved);
+    };
+
+    init();
   }, []);
 
   // Avatar style helpers
@@ -32,6 +73,16 @@ const PreviewPage: React.FC = () => {
       s.border !== false ? `${s.borderWidth || 4}px solid ${s.borderColor || '#ffffff'}` : 'none';
     return { borderRadius: radius, boxShadow: shadow, border };
   };
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-gray-700">
+        <h1 className="text-3xl font-bold mb-2">404</h1>
+        <p className="text-lg">{error}</p>
+        <a href="/" className="mt-6 text-blue-500 hover:underline">Go to Home</a>
+      </div>
+    );
+  }
 
   if (!bento) {
     return (

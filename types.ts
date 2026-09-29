@@ -5,6 +5,7 @@ export enum BlockType {
   SOCIAL = 'SOCIAL',
   SOCIAL_ICON = 'SOCIAL_ICON', // Small icon-only social block for 9x9 grid
   MAP = 'MAP',
+  CONTACT = 'CONTACT',
   SPACER = 'SPACER',
 }
 
@@ -36,6 +37,7 @@ export type SocialPlatform =
   | 'telegram'
   | 'whatsapp'
   | 'spotify'
+  | 'email'
   | 'custom';
 
 // Configured social account in settings
@@ -74,6 +76,17 @@ export interface BlockData {
   // Social platform (non-YouTube mode)
   socialPlatform?: SocialPlatform;
   socialHandle?: string; // Stored without leading '@' when possible
+
+  // Contact info
+  contactInfo?: {
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    email?: string;
+    company?: string;
+    jobTitle?: string;
+    website?: string;
+  };
 
   // Z-index for overlapping blocks (runtime only, not saved)
   zIndex?: number;
@@ -121,6 +134,8 @@ export interface UserProfile {
   socialAccounts?: SocialAccount[];
   // OpenGraph meta tags for social sharing
   openGraph?: OpenGraphData;
+  // Custom URL slug for dynamic multi-profile routing
+  slug?: string;
 }
 
 export interface SiteData {

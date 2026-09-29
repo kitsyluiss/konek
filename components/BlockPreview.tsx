@@ -450,6 +450,8 @@ const BlockPreview: React.FC<BlockPreviewProps> = ({
                   className="opacity-95 grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
                   src={`https://maps.google.com/maps?q=${encodeURIComponent(block.content || 'Paris')}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
                   loading="lazy"
+                      allowFullScreen
+                      referrerPolicy="no-referrer-when-downgrade"
                   sandbox="allow-scripts allow-same-origin"
                 ></iframe>
               ) : (

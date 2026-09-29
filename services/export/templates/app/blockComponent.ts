@@ -139,7 +139,9 @@ const Block = ({ block }: { block: BlockData }) => {
           ) : block.type === BlockType.MAP ? (
             <div className="w-full h-full relative bg-gray-100 overflow-hidden">
               <iframe width="100%" height="100%" className="opacity-95 grayscale-[20%] group-hover:grayscale-0 transition-all"
-                src={\`https://maps.google.com/maps?q=\${encodeURIComponent(block.content || 'Paris')}&t=&z=13&ie=UTF8&iwloc=&output=embed\`} loading="lazy" sandbox="allow-scripts allow-same-origin" />
+                src={\`https://maps.google.com/maps?q=\${encodeURIComponent(block.content || 'Paris')}&t=&z=13&ie=UTF8&iwloc=&output=embed\`} loading="lazy"
+                      allowFullScreen
+                      referrerPolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin" />
               {block.title && <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/60 to-transparent"><p className="font-semibold text-white text-sm">{block.title}</p></div>}
             </div>
           ) : isRichYT ? (

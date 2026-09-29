@@ -78,6 +78,11 @@ function App() {
     return <PreviewPage />;
   }
 
+  // Dynamic Profile Routing: e.g. /p/client-slug
+  if (route.startsWith('/p/')) {
+    return <PreviewPage />;
+  }
+
   if (route === '/analytics') {
     return <AnalyticsPage />;
   }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BlockData, BlockType, SocialPlatform, UserProfile } from '../types';
 import { BASE_COLORS } from '../constants';
+import { resizeImage } from '../utils/imageResizer';
 import {
   X,
   Link,
@@ -20,6 +21,7 @@ import {
   List,
   Palette,
   CheckCircle2,
+  Contact,
 } from 'lucide-react';
 import {
   buildSocialUrl,
@@ -53,14 +55,15 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
   const [isFetching, setIsFetching] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
-  const handleBlockImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBlockImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && editingBlock) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        updateBlock({ ...editingBlock, imageUrl: reader.result as string });
-      };
-      reader.readAsDataURL(file);
+      try {
+        const compressedDataUrl = await resizeImage(file, 1200, 0.8);
+        updateBlock({ ...editingBlock, imageUrl: compressedDataUrl });
+      } catch (err) {
+        console.error("Failed to compress image:", err);
+      }
     }
   };
 
@@ -772,7 +775,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                     {editingBlock.type === BlockType.MEDIA
                       ? 'Media URL / Path'
                       : editingBlock.type === BlockType.MAP
-                        ? 'Address / City'
+                        ? 'Address, City, or iframe embed'
                         : 'Destination URL'}
                   </label>
                   <input
@@ -825,6 +828,130 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                 </div>
               )}
             </div>
+
+            {/* Contact Info Fields */}
+            {editingBlock.type === BlockType.CONTACT && (
+              <div className="space-y-4 pt-4 border-t border-gray-100">
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                  Contact Information
+                </label>
+                
+                {/* Custom Contact Icon Upload */}
+                <div className="mb-4">
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                    Custom Icon / Photo
+                  </label>
+                  <label
+                    htmlFor="contact-icon-upload"
+                    className="relative group cursor-pointer border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-black transition-colors block"
+                    aria-label="Upload custom contact icon"
+                  >
+                    <input
+                      id="contact-icon-upload"
+                      type="file"
+                      className="sr-only"
+                      accept="image/*"
+                      onChange={handleBlockImageUpload}
+                    />
+                    <div className="flex flex-col items-center gap-2 text-gray-500">
+                      <Upload size={20} />
+                      <span className="text-xs">Click to upload custom image</span>
+                    </div>
+                    {editingBlock.imageUrl && (
+                      <div className="mt-2 text-[10px] text-green-600 font-medium text-center flex flex-col items-center gap-1">
+                        <span>Image Selected</span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            updateBlock({ ...editingBlock, imageUrl: undefined });
+                          }}
+                          className="px-2 py-1 bg-red-50 text-red-600 rounded-md hover:bg-red-100 mt-1 transition-colors relative z-10"
+                        >
+                          Remove Image
+                        </button>
+                      </div>
+                    )}
+                  </label>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    placeholder="First Name"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-black/5 focus:border-black focus:outline-none"
+                    value={editingBlock.contactInfo?.firstName || ''}
+                    onChange={(e) =>
+                      updateBlock({
+                        ...editingBlock,
+                        contactInfo: { ...editingBlock.contactInfo, firstName: e.target.value },
+                      })
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="Last Name"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-black/5 focus:border-black focus:outline-none"
+                    value={editingBlock.contactInfo?.lastName || ''}
+                    onChange={(e) =>
+                      updateBlock({
+                        ...editingBlock,
+                        contactInfo: { ...editingBlock.contactInfo, lastName: e.target.value },
+                      })
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="Phone"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-black/5 focus:border-black focus:outline-none col-span-2"
+                    value={editingBlock.contactInfo?.phone || ''}
+                    onChange={(e) =>
+                      updateBlock({
+                        ...editingBlock,
+                        contactInfo: { ...editingBlock.contactInfo, phone: e.target.value },
+                      })
+                    }
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-black/5 focus:border-black focus:outline-none col-span-2"
+                    value={editingBlock.contactInfo?.email || ''}
+                    onChange={(e) =>
+                      updateBlock({
+                        ...editingBlock,
+                        contactInfo: { ...editingBlock.contactInfo, email: e.target.value },
+                      })
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="Company"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-black/5 focus:border-black focus:outline-none"
+                    value={editingBlock.contactInfo?.company || ''}
+                    onChange={(e) =>
+                      updateBlock({
+                        ...editingBlock,
+                        contactInfo: { ...editingBlock.contactInfo, company: e.target.value },
+                      })
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="Job Title"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-black/5 focus:border-black focus:outline-none"
+                    value={editingBlock.contactInfo?.jobTitle || ''}
+                    onChange={(e) =>
+                      updateBlock({
+                        ...editingBlock,
+                        contactInfo: { ...editingBlock.contactInfo, jobTitle: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Appearance (Colors) */}
             {editingBlock.type !== BlockType.SPACER && (
@@ -914,6 +1041,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                   { type: BlockType.MEDIA, label: 'Media', icon: ImageIcon, color: 'bg-pink-600' },
                   { type: BlockType.TEXT, label: 'Note', icon: TypeIcon, color: 'bg-emerald-600' },
                   { type: BlockType.MAP, label: 'Map', icon: MapPin, color: 'bg-amber-500' },
+                  { type: BlockType.CONTACT, label: 'Contact', icon: Contact, color: 'bg-rose-500' },
                   {
                     type: BlockType.SPACER,
                     label: 'Spacer',

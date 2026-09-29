@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import type { SocialPlatform, UserProfile, BlockData } from '../types';
 import { AVATAR_PLACEHOLDER } from '../constants';
+import { resizeImage } from '../utils/imageResizer';
 import ImageCropModal from './ImageCropModal';
 import {
   buildSocialUrl,
@@ -348,6 +349,26 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                         <p className="text-[10px] text-gray-400 mt-1.5">
                           Used as filename when exporting JSON
                         </p>
+                        
+                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 mt-4">
+                          Dynamic Profile URL Slug
+                        </label>
+                        <div className="flex">
+                          <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-200 bg-gray-50 text-gray-500 sm:text-sm whitespace-nowrap">
+                            domain.com/p/
+                          </span>
+                          <input
+                            type="text"
+                            aria-label="Profile slug"
+                            value={profile.slug || ''}
+                            onChange={(e) => setProfile({ ...profile, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
+                            className="flex-1 block w-full min-w-0 rounded-none rounded-r-lg bg-gray-50 border border-gray-200 px-3 py-2 text-sm font-medium text-gray-800 focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 focus:outline-none transition-all"
+                            placeholder="client-name"
+                          />
+                        </div>
+                        <p className="text-[10px] text-gray-400 mt-1.5">
+                          Share this URL on your NFC card.
+                        </p>
                       </div>
                     </section>
                   )}
@@ -672,17 +693,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                             accept="image/*"
                             aria-label="Upload background image file"
                             className="hidden"
-                            onChange={(e) => {
+                            onChange={async (e) => {
                               const file = e.target.files?.[0];
                               if (file) {
-                                const reader = new FileReader();
-                                reader.onload = () => {
+                                try {
+                                  const compressedDataUrl = await resizeImage(file, 1920, 0.8);
                                   setProfile({
                                     ...profile,
-                                    backgroundImage: reader.result as string,
+                                    backgroundImage: compressedDataUrl,
                                   });
-                                };
-                                reader.readAsDataURL(file);
+                                } catch (err) {
+                                  console.error('Failed to process background image', err);
+                                }
                               }
                             }}
                           />
@@ -998,20 +1020,21 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                           accept="image/*"
                           aria-label="Upload OpenGraph image"
                           className="hidden"
-                          onChange={(e) => {
+                          onChange={async (e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              const reader = new FileReader();
-                              reader.onload = () => {
+                              try {
+                                const compressedDataUrl = await resizeImage(file, 1200, 0.8);
                                 setProfile({
                                   ...profile,
                                   openGraph: {
                                     ...profile.openGraph,
-                                    image: reader.result as string,
+                                    image: compressedDataUrl,
                                   },
                                 });
-                              };
-                              reader.readAsDataURL(file);
+                              } catch (err) {
+                                console.error('Failed to process OG image', err);
+                              }
                             }
                           }}
                         />

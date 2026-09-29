@@ -23,6 +23,7 @@ import {
   Send,
   Twitch,
   Video,
+  Mail,
   X,
   Youtube,
 } from 'lucide-react';
@@ -99,6 +100,15 @@ const ensureHttps = (value: string): string => {
 };
 
 export const SOCIAL_PLATFORM_OPTIONS: SocialPlatformOption[] = [
+  {
+    id: 'email',
+    label: 'Email',
+    icon: Mail,
+    brandColor: '#EA4335', // Generic red email color (Gmail-ish)
+    placeholder: 'hello@example.com',
+    kind: 'handle',
+    buildUrl: (input) => `mailto:${input.trim()}`,
+  },
   {
     id: 'x',
     label: 'X',

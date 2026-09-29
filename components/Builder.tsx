@@ -645,8 +645,10 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
             ? ''
             : type === BlockType.MAP
               ? 'Location'
-              : type === BlockType.SPACER
-                ? 'Spacer'
+              : type === BlockType.CONTACT
+                ? 'Save to Contacts'
+                : type === BlockType.SPACER
+                  ? 'Spacer'
                 : 'New Block',
       content: '',
       colSpan,

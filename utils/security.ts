@@ -9,7 +9,7 @@ export const isValidSafeUrl = (url: string | undefined | null): boolean => {
 
   try {
     const parsed = new URL(url);
-    return ['http:', 'https:'].includes(parsed.protocol);
+    return ['http:', 'https:', 'mailto:'].includes(parsed.protocol);
   } catch {
     return false;
   }
@@ -23,7 +23,7 @@ export const sanitizeUrl = (url: string | undefined | null): string => {
 
   try {
     const parsed = new URL(url);
-    if (['http:', 'https:'].includes(parsed.protocol)) {
+    if (['http:', 'https:', 'mailto:'].includes(parsed.protocol)) {
       return parsed.href;
     }
   } catch {
@@ -65,6 +65,7 @@ export const isValidLocationString = (location: string | undefined | null): bool
     /^file:/i,
     /^about:/i,
     /^blob:/i,
+    /^https?:/i, // Explicitly reject standard URLs, they should be iframes
   ];
 
   return !dangerousPatterns.some((pattern) => pattern.test(location.trim()));
@@ -101,6 +102,21 @@ export const escapeHtml = (str: string | undefined | null): string => {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+};
+
+/**
+ * Extracts a map URL from an iframe embed code or returns the URL directly
+ */
+export const extractMapSrc = (input: string | undefined | null): string | null => {
+  if (!input || typeof input !== 'string') return null;
+  if (input.includes('<iframe')) {
+    const match = input.match(/src=["'](https:\/\/(www\.)?google\.com\/maps\/embed[^"']+)["']/i);
+    return match ? match[1] : null;
+  }
+  if (input.startsWith('https://www.google.com/maps/embed') || input.startsWith('https://maps.google.com/maps/embed')) {
+    return input;
+  }
+  return null;
 };
 
 /**

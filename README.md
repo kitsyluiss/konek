@@ -1,177 +1,86 @@
-# OpenBento
+# 🚀 Konek 
 
-**A beautiful, open-source bento grid generator for creating stunning link-in-bio pages**
+> **The modern, dynamic NFC profile and link-in-bio builder.**
 
-[![Deploy to GitHub Pages](https://github.com/yoanbernabeu/openbento/actions/workflows/deploy.yml/badge.svg)](https://github.com/yoanbernabeu/openbento/actions/workflows/deploy.yml)
-[![Docker Build & Publish](https://github.com/yoanbernabeu/openbento/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/yoanbernabeu/openbento/actions/workflows/docker-publish.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Docker Pulls](https://img.shields.io/docker/pulls/yoanbernabeu/openbento)](https://hub.docker.com/r/yoanbernabeu/openbento)
+![Konek Banner](https://via.placeholder.com/1200x400/1e293b/ffffff?text=Konek+-+Next+Gen+NFC+Profiles)
 
-[Live Demo](https://yoanbernabeu.github.io/openbento/) • [Report Bug](https://github.com/yoanbernabeu/openbento/issues) • [Request Feature](https://github.com/yoanbernabeu/openbento/issues)
+**Konek** is an elegant, open-source dynamic profile builder tailored for NFC cards, creators, and professionals. Build beautiful, mobile-optimized link-in-bio pages with a powerful drag-and-drop React interface.
 
 ---
 
 ## ✨ Features
 
-### 🧱 Block Types (7 types)
-
-- 🔗 **Links** - Clickable links with titles & subtitles
-- 🖼️ **Media** - Images & GIFs with position control
-- 📺 **YouTube** - Single video, grid, or list mode
-- 📝 **Text** - Notes, quotes, and bio sections
-- 🌐 **Social** - 26+ platforms with branded colors
-- 📍 **Map** - Interactive Google Maps embed
-- ⬜ **Spacer** - Empty blocks for layout control
-
-### 🎨 Core Features
-
-- 🖱️ **Visual Drag & Drop** - Intuitive 9×9 grid editor. Drag, resize, and position blocks freely with real-time preview
-- 🎭 **Full Customization** - Colors, gradients, custom backgrounds. Avatars with borders, shadows & multiple shapes
-- 📦 **Export to React** - Download a complete Vite + React + TypeScript + Tailwind project, ready to deploy
-- 🚀 **Multi-Platform Deploy** - Auto-generated configs for Vercel, Netlify, GitHub Pages, Docker, VPS & Heroku
-- 🔒 **Privacy First** - No tracking, no account, no server required. All data stays in your browser localStorage
-- 📁 **Multiple Bentos** - Save and manage multiple projects locally. Switch between them instantly
-
-### 📊 Optional Analytics
-
-Track visits with your own Supabase instance:
-- Page views & unique visitors
-- Referrer tracking
-- Self-hosted on your Supabase project
-- No third-party cookies or trackers
-- Admin dashboard included
-
-See [ANALYTICS.md](ANALYTICS.md) for setup instructions.
-
-### 🌐 26+ Social Platforms Supported
-
-X (Twitter), Instagram, TikTok, YouTube, GitHub, GitLab, LinkedIn, Facebook, Twitch, Dribbble, Medium, Dev.to, Reddit, Pinterest, Threads, Bluesky, Mastodon, Substack, Patreon, Ko-fi, Buy Me a Coffee, Snapchat, Discord, Telegram, WhatsApp, and custom links.
-
-### 🛠️ Tech Stack (Exported Project)
-
-Your exported project includes: **React**, **Vite**, **TypeScript**, **Tailwind CSS**, **Lucide Icons**, **React Icons**
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18 or higher)
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yoanbernabeu/openbento.git
-   cd openbento
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-### Landing Page (Optional)
-
-By default, the app opens directly on the builder (no landing page) to make self-hosting easier.
-
-To enable the landing page:
-```bash
-VITE_ENABLE_LANDING=true npm run dev
-```
-
-For production builds:
-```bash
-VITE_ENABLE_LANDING=true npm run build
-```
-
-### Build for Production
-
-```bash
-npm run build
-```
-
-The built files will be in the `dist` directory.
-
-## 🐳 Using Docker
-
-OpenBento is available as a multi-platform Docker image supporting both AMD64 and ARM64 architectures (Intel/AMD servers, Mac M1/M2/M3, ARM servers, Raspberry Pi 4+).
-
-### Quick Start with Docker
-
-Pull and run the latest image:
-
-```bash
-docker run -d -p 8080:80 yoanbernabeu/openbento:latest
-```
-
-Then open [http://localhost:8080](http://localhost:8080) in your browser.
-
-### Multi-Platform Support
-
-The Docker image supports multiple architectures:
-- **linux/amd64** - Intel/AMD 64-bit (standard servers, PCs)
-- **linux/arm64** - ARM 64-bit (Mac M1/M2/M3, AWS Graviton, Raspberry Pi 4+)
-
-Docker automatically selects the correct image for your architecture.
-
-### Building Your Own Image
-
-```bash
-# Build for your current platform
-docker build -t openbento .
-
-# Build for multiple platforms
-docker buildx build --platform linux/amd64,linux/arm64 -t openbento .
-```
-
-### Docker Compose
-
-Create a `compose.yml`:
-
-```yaml
-services:
-  openbento:
-    image: yoanbernabeu/openbento:latest
-    ports:
-      - "8080:80"
-    restart: unless-stopped
-```
-
-Run with:
-
-```bash
-docker compose up -d
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) before submitting a pull request.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👥 Authors
-
-**Yoan Bernabeu**
-
-- GitHub: [@yoanbernabeu](https://github.com/yoanbernabeu)
-- Twitter: [@yOyO38](https://twitter.com/yOyO38)
-
-**Anis AYARI**
-
-- GitHub: [@anisayari](https://github.com/anisayari)
-- X: [@DFintelligence](https://x.com/DFintelligence)
+- 📱 **Mobile-First Design**: Optimized layouts that look stunning on any smartphone.
+- 🎨 **Drag-and-Drop Builder**: Build your profile intuitively with a beautiful visual editor.
+- 🔗 **Smart Blocks**: Link blocks, embedded media, Google Maps, YouTube videos, and rich social integrations.
+- 📞 **NFC-Ready Contacts**: Includes a native "Save to Contacts" block that generates vCards on the fly.
+- ⚡ **Lightning Fast**: Built with React and Vite for immediate loading times and smooth animations.
+- 🔒 **Privacy Focused**: Everything is stored securely; static hosting ready, no complex backend required.
 
 ---
 
-<div align="center">
-Made with ❤️ by the open-source community
-</div>
+## 🛠️ Tech Stack
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-black?style=for-the-badge&logo=framer&logoColor=blue)
+
+---
+
+## 🚀 Quick Start / Local Setup
+
+Follow these steps to get a local copy of Konek up and running:
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/kitsyluiss/konek.git
+cd konek
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Run the Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) to view the builder in the browser.
+
+### 4. Build for Production
+```bash
+npm run build
+```
+This generates the optimized static files into the `dist` directory, ready to be hosted on Vercel, Netlify, or GitHub Pages.
+
+---
+
+## 📂 Project Structure
+
+```text
+konek/
+├── public/                 # Static public assets
+├── src/                    
+│   ├── components/         # React UI Components (Builder, Blocks, Sidebar)
+│   ├── hooks/              # Custom React hooks
+│   ├── utils/              # Helper utilities (vCard generator, responsive logic, security)
+│   ├── types.ts            # TypeScript interfaces
+│   ├── App.tsx             # Main application entry
+│   └── index.css           # Global Tailwind and custom styles
+├── .github/
+│   └── workflows/          # CI/CD Actions
+├── package.json            # Project dependencies and scripts
+├── tsconfig.json           # TypeScript configuration
+└── vite.config.ts          # Vite bundler configuration
+```
+
+---
+
+## 🤝 Contributing
+We welcome community contributions! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
+
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

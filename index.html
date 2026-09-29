@@ -22,73 +22,6 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
-
-      /* ─── Portrait-Only Enforcement ──────────────────────────────── */
-      #rotate-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        z-index: 99999;
-        background: #09090f;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 28px;
-        padding: 40px 24px;
-        text-align: center;
-      }
-
-      /* Show only on mobile/tablet landscape (max-width guards desktop) */
-      @media (orientation: landscape) and (max-width: 1024px) {
-        #rotate-overlay {
-          display: flex;
-        }
-      }
-
-      .rotate-icon {
-        width: 80px;
-        height: 80px;
-        animation: rotate-pulse 2s ease-in-out infinite;
-        opacity: 0.9;
-      }
-
-      @keyframes rotate-pulse {
-        0%   { transform: rotate(0deg) scale(1); }
-        40%  { transform: rotate(-90deg) scale(1.08); }
-        60%  { transform: rotate(-90deg) scale(1.08); }
-        100% { transform: rotate(0deg) scale(1); }
-      }
-
-      .rotate-title {
-        font-family: 'Inter', sans-serif;
-        font-size: 22px;
-        font-weight: 700;
-        color: #f5f5f7;
-        letter-spacing: -0.3px;
-        margin: 0;
-      }
-
-      .rotate-sub {
-        font-family: 'Inter', sans-serif;
-        font-size: 14px;
-        color: #6b6b80;
-        max-width: 260px;
-        line-height: 1.6;
-        margin: 0;
-      }
-
-      .rotate-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 999px;
-        padding: 8px 18px;
-        font-size: 12px;
-        color: #9a9ab0;
-        letter-spacing: 0.5px;
-      }
     </style>
     <script type="importmap">
       {
@@ -105,26 +38,6 @@
     </script>
   </head>
   <body class="bg-gray-50 text-gray-900 overflow-x-hidden">
-
-    <!-- Portrait-only lock screen (shown via CSS on landscape mobile/tablet) -->
-    <div id="rotate-overlay" role="alert" aria-live="polite">
-      <svg class="rotate-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Phone body -->
-        <rect x="22" y="8" width="36" height="64" rx="7" stroke="#dfba6c" stroke-width="3.5" fill="none"/>
-        <rect x="34" y="62" width="12" height="4" rx="2" fill="#dfba6c" opacity="0.5"/>
-        <!-- Rotate arrow -->
-        <path d="M58 26 C68 36, 68 52, 58 62" stroke="#dfba6c" stroke-width="3" stroke-linecap="round" fill="none" stroke-dasharray="4 3" opacity="0.7"/>
-        <path d="M58 62 L53 56 M58 62 L64 57" stroke="#dfba6c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-
-      <p class="rotate-title">Please rotate your phone</p>
-      <p class="rotate-sub">This page is designed for portrait mode. Flip your phone upright for the best experience.</p>
-      <span class="rotate-pill">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
-        Portrait Mode Only
-      </span>
-    </div>
-
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

@@ -7,6 +7,7 @@ export enum BlockType {
   MAP = 'MAP',
   CONTACT = 'CONTACT',
   SPACER = 'SPACER',
+  FACEBOOK = 'FACEBOOK', // Facebook embed (video, page, post)
 }
 
 export type SocialPlatform =

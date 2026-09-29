@@ -1120,6 +1120,33 @@ const Block: React.FC<BlockProps> = ({
                 </div>
               )}
             </div>
+          ) : block.type === BlockType.FACEBOOK ? (
+            /* FACEBOOK EMBED BLOCK */
+            (() => {
+              // Extract src from the iframe HTML stored in block.content
+              const srcMatch = block.content?.match(/src=["']([^"']+)["']/);
+              const embedSrc = srcMatch ? srcMatch[1].replace(/&amp;/g, '&') : null;
+              return (
+                <div className="w-full h-full relative bg-[#1877F2] overflow-hidden rounded-[inherit]">
+                  {embedSrc ? (
+                    <iframe
+                      src={embedSrc}
+                      width="100%"
+                      height="100%"
+                      className="absolute inset-0 w-full h-full"
+                      style={{ border: 'none', overflow: 'hidden' }}
+                      scrolling="no"
+                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white text-sm opacity-60">
+                      Facebook embed
+                    </div>
+                  )}
+                </div>
+              );
+            })()
           ) : block.type === BlockType.MAP ? (
             /* MAP BLOCK - Clean minimal */
             <div className="w-full h-full relative bg-gray-100 overflow-hidden">

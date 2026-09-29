@@ -314,6 +314,9 @@ export const importKonekFromJSON = (json: KonekJSON): SavedKonek => {
     data: {
       gridVersion: json.gridVersion ?? GRID_VERSION,
       profile: {
+        // Spread all profile fields so nothing is lost on import/preview
+        ...(json.profile || {}),
+        // Ensure required fields have fallbacks
         name: json.profile?.name || 'My Konek',
         bio: json.profile?.bio || '',
         avatarUrl: json.profile?.avatarUrl || AVATAR_PLACEHOLDER,

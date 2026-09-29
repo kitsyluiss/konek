@@ -11,17 +11,50 @@ import Block from './Block';
 import { buildSocialUrl, formatFollowerCount, getSocialPlatformOption } from '../socialPlatforms';
 import { getMobileLayout, MOBILE_GRID_CONFIG } from '../utils/mobileLayout';
 
-import { useParams } from 'react-router-dom';
-
 const PreviewPage: React.FC = () => {
-  const { slug } = useParams<{ slug: string }>();
   const [konek, setKonek] = useState<SavedKonek | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLandscape, setIsLandscape] = useState(false);
+
+  // Lock orientation to portrait on supported devices (mobile browsers)
+  useEffect(() => {
+    // Try native Screen Orientation API lock first (works on Android Chrome/PWA)
+    const tryLock = async () => {
+      try {
+        if (screen.orientation && 'lock' in screen.orientation) {
+          await screen.orientation.lock('portrait');
+        }
+      } catch {
+        // Silently fail on desktop or unsupported browsers
+      }
+    };
+    tryLock();
+
+    // CSS fallback: detect landscape and show a "please rotate" overlay
+    const checkOrientation = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight);
+    };
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
+  }, []);
 
   useEffect(() => {
     const init = async () => {
+      const pathname = window.location.pathname;
+      const params = new URLSearchParams(window.location.search);
+
+      let slug = '';
+      if (pathname.startsWith('/p/')) {
+        slug = pathname.split('/p/')[1]?.replace(/\/$/, '');
+      }
+
       // If we have a slug, try to find it
-      if (slug && slug !== 'demo') {
+      if (slug) {
         // 1. Check local storage koneks for matching slug
         const localKoneks = getAllKoneks();
         const matchedKonek = localKoneks.find((b) => b.data.profile.slug === slug || b.id === slug);
@@ -32,12 +65,8 @@ const PreviewPage: React.FC = () => {
         }
 
         // 2. Try fetching from public /koneks/ folder
-        // For github pages base path, we should use import.meta.env.BASE_URL if needed, but relative should work
         try {
-          // If we are in github pages, we need to make sure we append it to the base URL
-          const baseUrl = import.meta.env.BASE_URL || '/';
-          const fetchUrl = `${baseUrl}koneks/${slug}.json`.replace('//', '/');
-          const res = await fetch(fetchUrl);
+          const res = await fetch(`/koneks/${slug}.json`);
           if (res.ok) {
             const json = await res.json();
             const imported = importKonekFromJSON(json);
@@ -53,12 +82,15 @@ const PreviewPage: React.FC = () => {
       }
 
       // Fallback for normal preview
-      const resolved = getOrCreateActiveKonek();
+      const requestedId = params.get('id')?.trim();
+      const requested = requestedId ? getKonek(requestedId) : null;
+      const resolved = requested || getOrCreateActiveKonek();
+      if (requested) setActiveKonekId(requested.id);
       setKonek(resolved);
     };
 
     init();
-  }, [slug]);
+  }, []);
 
   // Avatar style helpers
   const getAvatarStyle = (style?: AvatarStyle): React.CSSProperties => {
@@ -98,6 +130,51 @@ const PreviewPage: React.FC = () => {
 
   const profile = konek.data.profile;
   const blocks = konek.data.blocks;
+
+  // Portrait-only: show a rotation prompt if user is in landscape
+  if (isLandscape) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          background: 'linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '1.5rem',
+          color: 'white',
+          fontFamily: 'Inter, sans-serif',
+        }}
+      >
+        {/* Animated rotate phone icon */}
+        <div
+          style={{
+            fontSize: '4rem',
+            animation: 'rotate-hint 1.8s ease-in-out infinite',
+          }}
+        >
+          📱
+        </div>
+        <style>{`
+          @keyframes rotate-hint {
+            0%   { transform: rotate(0deg); }
+            30%  { transform: rotate(90deg); }
+            70%  { transform: rotate(90deg); }
+            100% { transform: rotate(0deg); }
+          }
+        `}</style>
+        <p style={{ fontSize: '1.1rem', fontWeight: 600, textAlign: 'center', margin: 0 }}>
+          Please rotate your device
+        </p>
+        <p style={{ fontSize: '0.85rem', opacity: 0.5, textAlign: 'center', margin: 0 }}>
+          This profile is best viewed in portrait mode
+        </p>
+      </div>
+    );
+  }
 
   // Sort blocks for mobile (by row, then column)
   const sortedBlocks = [...blocks].sort((a, b) => {

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import type { AvatarStyle, SavedKonek } from '../types';
 import {
   getKonek,
@@ -12,6 +13,7 @@ import { buildSocialUrl, formatFollowerCount, getSocialPlatformOption } from '..
 import { getMobileLayout, MOBILE_GRID_CONFIG } from '../utils/mobileLayout';
 
 const PreviewPage: React.FC = () => {
+  const { slug } = useParams<{ slug: string }>();
   const [konek, setKonek] = useState<SavedKonek | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLandscape, setIsLandscape] = useState(false);
@@ -45,14 +47,6 @@ const PreviewPage: React.FC = () => {
 
   useEffect(() => {
     const init = async () => {
-      const pathname = window.location.pathname;
-      const params = new URLSearchParams(window.location.search);
-
-      let slug = '';
-      if (pathname.startsWith('/p/')) {
-        slug = pathname.split('/p/')[1]?.replace(/\/$/, '');
-      }
-
       // If we have a slug, try to find it
       if (slug) {
         // 1. Check local storage koneks for matching slug

@@ -22,6 +22,7 @@ import {
   Palette,
   CheckCircle2,
   Contact,
+  Facebook,
 } from 'lucide-react';
 import {
   buildSocialUrl,
@@ -733,6 +734,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
               {/* 4. CONTENT FIELDS (Standard) */}
               {(editingBlock.type === BlockType.LINK ||
                 editingBlock.type === BlockType.MEDIA ||
+                editingBlock.type === BlockType.FACEBOOK ||
                 editingBlock.type === BlockType.MAP) && (
                 <div>
                   {/* Image Upload for Block */}
@@ -774,9 +776,11 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                   <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
                     {editingBlock.type === BlockType.MEDIA
                       ? 'Media URL / Path'
-                      : editingBlock.type === BlockType.MAP
-                        ? 'Address, City, or iframe embed'
-                        : 'Destination URL'}
+                      : editingBlock.type === BlockType.FACEBOOK
+                        ? 'Facebook Page or Video URL'
+                        : editingBlock.type === BlockType.MAP
+                          ? 'Address, City, or iframe embed'
+                          : 'Destination URL'}
                   </label>
                   <input
                     type="text"
@@ -1041,6 +1045,12 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                   { type: BlockType.MEDIA, label: 'Media', icon: ImageIcon, color: 'bg-pink-600' },
                   { type: BlockType.TEXT, label: 'Note', icon: TypeIcon, color: 'bg-emerald-600' },
                   { type: BlockType.MAP, label: 'Map', icon: MapPin, color: 'bg-amber-500' },
+                  {
+                    type: BlockType.FACEBOOK,
+                    label: 'Facebook',
+                    icon: Facebook,
+                    color: 'bg-blue-600',
+                  },
                   {
                     type: BlockType.CONTACT,
                     label: 'Contact',

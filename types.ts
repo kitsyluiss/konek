@@ -7,6 +7,7 @@ export enum BlockType {
   MAP = 'MAP',
   CONTACT = 'CONTACT',
   SPACER = 'SPACER',
+  FACEBOOK = 'FACEBOOK',
 }
 
 export type SocialPlatform =
@@ -87,6 +88,9 @@ export interface BlockData {
     jobTitle?: string;
     website?: string;
   };
+
+  // Facebook specific
+  facebookUrl?: string; // The URL to the Facebook page or video
 
   // Z-index for overlapping blocks (runtime only, not saved)
   zIndex?: number;

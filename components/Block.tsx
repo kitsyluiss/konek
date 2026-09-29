@@ -20,6 +20,7 @@ import {
   isValidYouTubeChannelId,
   isValidLocationString,
   extractMapSrc,
+  extractFacebookSrc,
 } from '../utils/security';
 
 // Apple TV style 3D tilt effect hook
@@ -1117,6 +1118,40 @@ const Block: React.FC<BlockProps> = ({
                   {block.subtext && (
                     <p className={`media-subtext ${textSizes.overlaySubtext}`}>{block.subtext}</p>
                   )}
+                </div>
+              )}
+            </div>
+          ) : block.type === BlockType.FACEBOOK ? (
+            /* FACEBOOK BLOCK */
+            <div className="w-full h-full relative overflow-hidden bg-[#f0f2f5] flex items-center justify-center">
+              {(() => {
+                const fbSrc = extractFacebookSrc(block.content);
+                if (fbSrc) {
+                  return (
+                    <iframe
+                      src={fbSrc}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 'none', overflow: 'hidden' }}
+                      scrolling="no"
+                      frameBorder="0"
+                      allowFullScreen={true}
+                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                      className="absolute inset-0 pointer-events-none group-hover:pointer-events-auto"
+                    ></iframe>
+                  );
+                }
+                return (
+                  <div className="text-gray-400 text-xs font-medium text-center p-4">
+                    Enter a Facebook Page or Video URL
+                  </div>
+                );
+              })()}
+              {block.title && !block.content && (
+                <div className="absolute bottom-0 left-0 right-0 p-2 md:p-3 bg-gradient-to-t from-black/60 to-transparent z-10 pointer-events-none">
+                  <p className={`font-semibold text-white drop-shadow ${textSizes.overlayTitle}`}>
+                    {block.title}
+                  </p>
                 </div>
               )}
             </div>

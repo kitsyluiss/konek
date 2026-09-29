@@ -131,3 +131,39 @@ export const isValidDomain = (domain: string | undefined | null): boolean => {
   // Basic domain validation - alphanumeric, hyphens, dots
   return /^[a-zA-Z0-9][a-zA-Z0-9.-]*\.[a-zA-Z]{2,}$/.test(domain);
 };
+
+/**
+ * Extracts a Facebook embed URL from an iframe or raw URL
+ */
+export const extractFacebookSrc = (input: string | undefined | null): string | null => {
+  if (!input || typeof input !== 'string') return null;
+
+  // If it's already an iframe, extract the src
+  if (input.includes('<iframe')) {
+    const match = input.match(/src=["']([^"']+)["']/i);
+    if (match && match[1].includes('facebook.com/plugins/')) {
+      return match[1];
+    }
+  }
+
+  // If it's already an embed URL
+  if (
+    input.includes('facebook.com/plugins/page.php') ||
+    input.includes('facebook.com/plugins/video.php')
+  ) {
+    return input;
+  }
+
+  // If it's a raw Facebook URL
+  if (input.includes('facebook.com') || input.includes('fb.watch')) {
+    const isVideo =
+      input.includes('/videos/') || input.includes('/watch') || input.includes('fb.watch');
+    if (isVideo) {
+      return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(input)}&show_text=false&width=560`;
+    } else {
+      return `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(input)}&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId`;
+    }
+  }
+
+  return null;
+};

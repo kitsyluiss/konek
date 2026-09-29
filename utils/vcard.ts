@@ -30,17 +30,17 @@ export const generateVCard = (contact: BlockData['contactInfo']): string => {
 export const downloadVCard = (contact: BlockData['contactInfo']) => {
   if (!contact) return;
   const vcard = generateVCard(contact);
-  const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
+
+  // Use a data URI to force native OS handling (especially for iOS Safari)
+  // which will immediately open the Contacts app instead of the Downloads folder.
+  const dataUri = `data:text/vcard;charset=utf-8,${encodeURIComponent(vcard)}`;
 
   const link = document.createElement('a');
-  link.href = url;
-
-  const name = `${contact.firstName || 'contact'}_${contact.lastName || ''}`.trim();
-  link.download = `${name || 'contact'}.vcf`;
+  link.href = dataUri;
+  link.target = '_blank';
+  // Deliberately omitting link.download so the browser opens it instead of saving it to Files
 
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  URL.revokeObjectURL(url);
 };

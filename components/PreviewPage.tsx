@@ -24,7 +24,7 @@ const PreviewPage: React.FC = () => {
     const tryLock = async () => {
       try {
         if (screen.orientation && 'lock' in screen.orientation) {
-          await screen.orientation.lock('portrait');
+          await (screen.orientation as any).lock('portrait');
         }
       } catch {
         // Silently fail on desktop or unsupported browsers
@@ -47,6 +47,8 @@ const PreviewPage: React.FC = () => {
 
   useEffect(() => {
     const init = async () => {
+      const params = new URLSearchParams(window.location.search);
+
       // If we have a slug, try to find it
       if (slug) {
         // 1. Check local storage koneks for matching slug
@@ -341,7 +343,9 @@ const PreviewPage: React.FC = () => {
                     <a
                       key={account.platform}
                       href={url}
-                      target={url.startsWith('mailto:') || url.startsWith('tel:') ? '_self' : '_blank'}
+                      target={
+                        url.startsWith('mailto:') || url.startsWith('tel:') ? '_self' : '_blank'
+                      }
                       rel="noopener noreferrer"
                       className={`${showCount ? 'px-3 py-2' : 'w-10 h-10'} bg-white rounded-full shadow-md flex items-center justify-center gap-2 font-semibold text-gray-900 transition-transform hover:-translate-y-0.5`}
                       title={option.label}

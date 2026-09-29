@@ -741,7 +741,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   return {
     // Base URL pour GitHub Pages (utilise le nom du repo)
-    base: process.env.GITHUB_ACTIONS ? '/openbento/' : '/',
+    base: process.env.GITHUB_ACTIONS ? '/konek/' : '/',
     server: {
       port: 3000,
       host: '0.0.0.0',

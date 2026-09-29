@@ -78,7 +78,7 @@ const notFoundHtml = `<!DOCTYPE html>
   <script>
     // Redirect to the SPA with the current path
     const path = window.location.pathname;
-    const base = '${process.env.GITHUB_ACTIONS ? '/openbento' : ''}';
+    const base = '${process.env.GITHUB_ACTIONS ? '/konek' : ''}';
     if (path.startsWith(base)) {
       sessionStorage.setItem('redirect', path);
       window.location.replace(base + '/');

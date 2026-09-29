@@ -60,7 +60,8 @@ const PreviewPage: React.FC = () => {
 
         // 2. Try fetching from public /koneks/ folder
         try {
-          const res = await fetch(`/koneks/${slug}.json`);
+          const fetchUrl = `${import.meta.env.BASE_URL}koneks/${slug}.json`;
+          const res = await fetch(fetchUrl);
           if (res.ok) {
             const json = await res.json();
             const imported = importKonekFromJSON(json);

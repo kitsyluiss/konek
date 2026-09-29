@@ -349,7 +349,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                         <p className="text-[10px] text-gray-400 mt-1.5">
                           Used as filename when exporting JSON
                         </p>
-                        
+
                         <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 mt-4">
                           Dynamic Profile URL Slug
                         </label>
@@ -361,7 +361,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                             type="text"
                             aria-label="Profile slug"
                             value={profile.slug || ''}
-                            onChange={(e) => setProfile({ ...profile, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
+                            onChange={(e) =>
+                              setProfile({
+                                ...profile,
+                                slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''),
+                              })
+                            }
                             className="flex-1 block w-full min-w-0 rounded-none rounded-r-lg bg-gray-50 border border-gray-200 px-3 py-2 text-sm font-medium text-gray-800 focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 focus:outline-none transition-all"
                             placeholder="client-name"
                           />

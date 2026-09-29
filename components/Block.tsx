@@ -15,7 +15,12 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getSocialPlatformOption, inferSocialPlatformFromUrl } from '../socialPlatforms';
-import { openSafeUrl, isValidYouTubeChannelId, isValidLocationString, extractMapSrc } from '../utils/security';
+import {
+  openSafeUrl,
+  isValidYouTubeChannelId,
+  isValidLocationString,
+  extractMapSrc,
+} from '../utils/security';
 
 // Apple TV style 3D tilt effect hook
 const useTiltEffect = (isEnabled: boolean = true) => {
@@ -838,7 +843,7 @@ const Block: React.FC<BlockProps> = ({
         if (previewMode) {
           if (block.type === BlockType.CONTACT && block.contactInfo) {
             e.preventDefault();
-            import('../utils/vcard').then(m => m.downloadVCard(block.contactInfo!));
+            import('../utils/vcard').then((m) => m.downloadVCard(block.contactInfo!));
             return;
           }
           // In preview mode, navigate to block URL with security validation
@@ -1131,7 +1136,6 @@ const Block: React.FC<BlockProps> = ({
                       loading="lazy"
                       allowFullScreen
                       referrerPolicy="no-referrer-when-downgrade"
-                      
                     ></iframe>
                   );
                 } else if (isValidLocationString(block.content)) {
@@ -1144,7 +1148,6 @@ const Block: React.FC<BlockProps> = ({
                       loading="lazy"
                       allowFullScreen
                       referrerPolicy="no-referrer-when-downgrade"
-                      
                     ></iframe>
                   );
                 }
@@ -1167,7 +1170,11 @@ const Block: React.FC<BlockProps> = ({
             <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center">
               <div className="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-black/5 rounded-full flex items-center justify-center mb-2 shadow-sm overflow-hidden shrink-0">
                 {block.imageUrl ? (
-                  <img src={block.imageUrl} alt="Contact icon" className="w-full h-full object-cover" />
+                  <img
+                    src={block.imageUrl}
+                    alt="Contact icon"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <Contact size={24} className={block.textColor || 'text-black'} />
                 )}

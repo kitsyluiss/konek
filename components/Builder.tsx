@@ -649,7 +649,7 @@ const Builder: React.FC<BuilderProps> = ({ onBack }) => {
                 ? 'Save to Contacts'
                 : type === BlockType.SPACER
                   ? 'Spacer'
-                : 'New Block',
+                  : 'New Block',
       content: '',
       colSpan,
       rowSpan,

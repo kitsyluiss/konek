@@ -23,7 +23,7 @@ export const resizeImage = (file: File, maxWidth = 1200, quality = 0.8): Promise
         }
 
         ctx.drawImage(img, 0, 0, width, height);
-        
+
         // Output as webp to significantly reduce base64 string size for local storage
         const dataUrl = canvas.toDataURL('image/webp', quality);
         resolve(dataUrl);

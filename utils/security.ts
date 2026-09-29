@@ -113,7 +113,10 @@ export const extractMapSrc = (input: string | undefined | null): string | null =
     const match = input.match(/src=["'](https:\/\/(www\.)?google\.com\/maps\/embed[^"']+)["']/i);
     return match ? match[1] : null;
   }
-  if (input.startsWith('https://www.google.com/maps/embed') || input.startsWith('https://maps.google.com/maps/embed')) {
+  if (
+    input.startsWith('https://www.google.com/maps/embed') ||
+    input.startsWith('https://maps.google.com/maps/embed')
+  ) {
     return input;
   }
   return null;

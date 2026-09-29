@@ -62,7 +62,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
         const compressedDataUrl = await resizeImage(file, 1200, 0.8);
         updateBlock({ ...editingBlock, imageUrl: compressedDataUrl });
       } catch (err) {
-        console.error("Failed to compress image:", err);
+        console.error('Failed to compress image:', err);
       }
     }
   };
@@ -835,7 +835,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                 <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
                   Contact Information
                 </label>
-                
+
                 {/* Custom Contact Icon Upload */}
                 <div className="mb-4">
                   <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
@@ -1041,7 +1041,12 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                   { type: BlockType.MEDIA, label: 'Media', icon: ImageIcon, color: 'bg-pink-600' },
                   { type: BlockType.TEXT, label: 'Note', icon: TypeIcon, color: 'bg-emerald-600' },
                   { type: BlockType.MAP, label: 'Map', icon: MapPin, color: 'bg-amber-500' },
-                  { type: BlockType.CONTACT, label: 'Contact', icon: Contact, color: 'bg-rose-500' },
+                  {
+                    type: BlockType.CONTACT,
+                    label: 'Contact',
+                    icon: Contact,
+                    color: 'bg-rose-500',
+                  },
                   {
                     type: BlockType.SPACER,
                     label: 'Spacer',

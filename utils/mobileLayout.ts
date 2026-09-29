@@ -14,12 +14,11 @@ export const getMobileLayout = (block: BlockData): { colSpan: number; rowSpan: n
   // it should take up the full width (2 columns) on mobile to preserve its horizontal nature.
   const isLandscape = block.colSpan > block.rowSpan;
   const isWide = block.colSpan >= 4;
-  
-  const mobileColSpan = (isLandscape || isWide) ? 2 : 1;
+
+  const mobileColSpan = isLandscape || isWide ? 2 : 1;
 
   // Blocks that become narrow need to ensure they have enough height to not look squished
-  const mobileRowSpan =
-    mobileColSpan === 1 ? Math.max(block.rowSpan, 2) : block.rowSpan;
+  const mobileRowSpan = mobileColSpan === 1 ? Math.max(block.rowSpan, 2) : block.rowSpan;
 
   return {
     colSpan: mobileColSpan,

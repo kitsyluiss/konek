@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import type { AvatarStyle, SavedBento } from '../types';
-import { getBento, getOrCreateActiveBento, setActiveBentoId, getAllBentos, importBentoFromJSON } from '../services/storageService';
+import {
+  getBento,
+  getOrCreateActiveBento,
+  setActiveBentoId,
+  getAllBentos,
+  importBentoFromJSON,
+} from '../services/storageService';
 import Block from './Block';
 import { buildSocialUrl, formatFollowerCount, getSocialPlatformOption } from '../socialPlatforms';
 import { getMobileLayout, MOBILE_GRID_CONFIG } from '../utils/mobileLayout';
@@ -13,7 +19,7 @@ const PreviewPage: React.FC = () => {
     const init = async () => {
       const pathname = window.location.pathname;
       const params = new URLSearchParams(window.location.search);
-      
+
       let slug = '';
       if (pathname.startsWith('/p/')) {
         slug = pathname.split('/p/')[1]?.replace(/\/$/, '');
@@ -23,8 +29,8 @@ const PreviewPage: React.FC = () => {
       if (slug) {
         // 1. Check local storage bentos for matching slug
         const localBentos = getAllBentos();
-        const matchedBento = localBentos.find(b => b.data.profile.slug === slug || b.id === slug);
-        
+        const matchedBento = localBentos.find((b) => b.data.profile.slug === slug || b.id === slug);
+
         if (matchedBento) {
           setBento(matchedBento);
           return;
@@ -40,10 +46,10 @@ const PreviewPage: React.FC = () => {
             return;
           }
         } catch (e) {
-          console.error("Failed to fetch remote bento:", e);
+          console.error('Failed to fetch remote bento:', e);
         }
 
-        setError("Profile not found.");
+        setError('Profile not found.');
         return;
       }
 
@@ -79,7 +85,9 @@ const PreviewPage: React.FC = () => {
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-gray-700">
         <h1 className="text-3xl font-bold mb-2">404</h1>
         <p className="text-lg">{error}</p>
-        <a href="/" className="mt-6 text-blue-500 hover:underline">Go to Home</a>
+        <a href="/" className="mt-6 text-blue-500 hover:underline">
+          Go to Home
+        </a>
       </div>
     );
   }

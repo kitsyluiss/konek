@@ -11,22 +11,17 @@ import Block from './Block';
 import { buildSocialUrl, formatFollowerCount, getSocialPlatformOption } from '../socialPlatforms';
 import { getMobileLayout, MOBILE_GRID_CONFIG } from '../utils/mobileLayout';
 
+import { useParams } from 'react-router-dom';
+
 const PreviewPage: React.FC = () => {
+  const { slug } = useParams<{ slug: string }>();
   const [konek, setKonek] = useState<SavedKonek | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const init = async () => {
-      const pathname = window.location.pathname;
-      const params = new URLSearchParams(window.location.search);
-
-      let slug = '';
-      if (pathname.startsWith('/p/')) {
-        slug = pathname.split('/p/')[1]?.replace(/\/$/, '');
-      }
-
       // If we have a slug, try to find it
-      if (slug) {
+      if (slug && slug !== 'demo') {
         // 1. Check local storage koneks for matching slug
         const localKoneks = getAllKoneks();
         const matchedKonek = localKoneks.find((b) => b.data.profile.slug === slug || b.id === slug);
@@ -37,8 +32,12 @@ const PreviewPage: React.FC = () => {
         }
 
         // 2. Try fetching from public /koneks/ folder
+        // For github pages base path, we should use import.meta.env.BASE_URL if needed, but relative should work
         try {
-          const res = await fetch(`/koneks/${slug}.json`);
+          // If we are in github pages, we need to make sure we append it to the base URL
+          const baseUrl = import.meta.env.BASE_URL || '/';
+          const fetchUrl = `${baseUrl}koneks/${slug}.json`.replace('//', '/');
+          const res = await fetch(fetchUrl);
           if (res.ok) {
             const json = await res.json();
             const imported = importKonekFromJSON(json);
@@ -54,15 +53,12 @@ const PreviewPage: React.FC = () => {
       }
 
       // Fallback for normal preview
-      const requestedId = params.get('id')?.trim();
-      const requested = requestedId ? getKonek(requestedId) : null;
-      const resolved = requested || getOrCreateActiveKonek();
-      if (requested) setActiveKonekId(requested.id);
+      const resolved = getOrCreateActiveKonek();
       setKonek(resolved);
     };
 
     init();
-  }, []);
+  }, [slug]);
 
   // Avatar style helpers
   const getAvatarStyle = (style?: AvatarStyle): React.CSSProperties => {

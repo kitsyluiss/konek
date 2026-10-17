@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import type { AvatarStyle, SavedKonek } from '../types';
 import {
   getKonek,
@@ -12,6 +13,7 @@ import { buildSocialUrl, formatFollowerCount, getSocialPlatformOption } from '..
 import { getMobileLayout, MOBILE_GRID_CONFIG } from '../utils/mobileLayout';
 
 const PreviewPage: React.FC = () => {
+  const { slug } = useParams<{ slug: string }>();
   const [konek, setKonek] = useState<SavedKonek | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLandscape, setIsLandscape] = useState(false);
@@ -22,7 +24,7 @@ const PreviewPage: React.FC = () => {
     const tryLock = async () => {
       try {
         if (screen.orientation && 'lock' in screen.orientation) {
-          await screen.orientation.lock('portrait');
+          await (screen.orientation as any).lock('portrait');
         }
       } catch {
         // Silently fail on desktop or unsupported browsers
@@ -45,13 +47,7 @@ const PreviewPage: React.FC = () => {
 
   useEffect(() => {
     const init = async () => {
-      const pathname = window.location.pathname;
       const params = new URLSearchParams(window.location.search);
-
-      let slug = '';
-      if (pathname.startsWith('/p/')) {
-        slug = pathname.split('/p/')[1]?.replace(/\/$/, '');
-      }
 
       // If we have a slug, try to find it
       if (slug) {
@@ -66,7 +62,8 @@ const PreviewPage: React.FC = () => {
 
         // 2. Try fetching from public /koneks/ folder
         try {
-          const res = await fetch(`/koneks/${slug}.json`);
+          const fetchUrl = `${import.meta.env.BASE_URL}koneks/${slug}.json`;
+          const res = await fetch(fetchUrl);
           if (res.ok) {
             const json = await res.json();
             const imported = importKonekFromJSON(json);
@@ -202,7 +199,7 @@ const PreviewPage: React.FC = () => {
             <a
               key={account.platform}
               href={url}
-              target="_blank"
+              target={url.startsWith('mailto:') || url.startsWith('tel:') ? '_self' : '_blank'}
               rel="noopener noreferrer"
               className={`${showCount ? 'px-3 py-2' : 'w-10 h-10'} bg-white rounded-full shadow-md flex items-center justify-center gap-2 hover:scale-105 hover:shadow-lg transition-all`}
               title={option.label}
@@ -346,7 +343,9 @@ const PreviewPage: React.FC = () => {
                     <a
                       key={account.platform}
                       href={url}
-                      target="_blank"
+                      target={
+                        url.startsWith('mailto:') || url.startsWith('tel:') ? '_self' : '_blank'
+                      }
                       rel="noopener noreferrer"
                       className={`${showCount ? 'px-3 py-2' : 'w-10 h-10'} bg-white rounded-full shadow-md flex items-center justify-center gap-2 font-semibold text-gray-900 transition-transform hover:-translate-y-0.5`}
                       title={option.label}

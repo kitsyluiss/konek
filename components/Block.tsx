@@ -529,7 +529,7 @@ const Block: React.FC<BlockProps> = ({
         layoutId={block.id}
         layout
         href={url || undefined}
-        target="_blank"
+        target={url && (url.startsWith('mailto:') || url.startsWith('tel:')) ? '_self' : '_blank'}
         rel="noopener noreferrer"
         draggable={!isResizing}
         onDragStart={(e) => {
@@ -1135,9 +1135,9 @@ const Block: React.FC<BlockProps> = ({
                       style={{ border: 'none', overflow: 'hidden' }}
                       scrolling="no"
                       frameBorder="0"
-                      allowFullScreen={true}
+                      allowFullScreen={false}
                       allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                      className="absolute inset-0 pointer-events-none group-hover:pointer-events-auto"
+                      className={`absolute inset-0 ${!previewMode ? 'pointer-events-none' : ''}`}
                     ></iframe>
                   );
                 }

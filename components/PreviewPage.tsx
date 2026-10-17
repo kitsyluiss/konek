@@ -51,19 +51,10 @@ const PreviewPage: React.FC = () => {
 
       // If we have a slug, try to find it
       if (slug) {
-        // 1. Check local storage koneks for matching slug
-        const localKoneks = getAllKoneks();
-        const matchedKonek = localKoneks.find((b) => b.data.profile.slug === slug || b.id === slug);
-
-        if (matchedKonek) {
-          setKonek(matchedKonek);
-          return;
-        }
-
-        // 2. Try fetching from public /koneks/ folder
+        // 1. Try fetching from public /koneks/ folder first to get the latest published profile
         try {
-          const fetchUrl = `${import.meta.env.BASE_URL}koneks/${slug}.json`;
-          const res = await fetch(fetchUrl);
+          const fetchUrl = `${import.meta.env.BASE_URL}koneks/${slug}.json?v=${Date.now()}`;
+          const res = await fetch(fetchUrl, { cache: 'no-cache' });
           if (res.ok) {
             const json = await res.json();
             const imported = importKonekFromJSON(json);
@@ -72,6 +63,15 @@ const PreviewPage: React.FC = () => {
           }
         } catch (e) {
           console.error('Failed to fetch remote konek:', e);
+        }
+
+        // 2. Fallback to check local storage koneks for matching slug
+        const localKoneks = getAllKoneks();
+        const matchedKonek = localKoneks.find((b) => b.data.profile.slug === slug || b.id === slug);
+
+        if (matchedKonek) {
+          setKonek(matchedKonek);
+          return;
         }
 
         setError('Profile not found.');

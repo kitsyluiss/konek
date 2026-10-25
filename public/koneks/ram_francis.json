@@ -15,12 +15,12 @@
     },
     "socialAccounts": [
       {
-        "platform": "facebook",
-        "handle": "RamFrancisCapayaRivera"
-      },
-      {
         "platform": "instagram",
         "handle": "riverafragrancehouse._07"
+      },
+      {
+        "platform": "facebook",
+        "handle": "riverafraghouse"
       }
     ],
     "showSocialInHeader": true
@@ -89,7 +89,7 @@
       "id": "konek_1790688908518_rlsja61k3",
       "type": "SOCIAL",
       "title": "Facebook",
-      "content": "https://www.facebook.com/riverafraghouse",
+      "content": "https://www.facebook.com/ramfranciscapayarivera",
       "colSpan": 2,
       "rowSpan": 2,
       "color": "bg-blue-500",
@@ -97,8 +97,8 @@
       "gridColumn": 5,
       "gridRow": 3,
       "socialPlatform": "facebook",
-      "socialHandle": "riverafraghouse",
-      "subtext": "riverafraghouse"
+      "socialHandle": "ramfranciscapayarivera",
+      "subtext": "Facebook Account"
     },
     {
       "id": "konek_1790688908518_d4oyq1vaq",
@@ -129,5 +129,5 @@
     }
   ],
   "gridVersion": 2,
-  "exportedAt": 1792273209714
+  "exportedAt": 1792904354262
 }
